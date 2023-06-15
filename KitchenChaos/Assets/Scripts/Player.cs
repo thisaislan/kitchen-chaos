@@ -4,6 +4,7 @@ public class Player : MonoBehaviour
 {
 
     [SerializeField] private float moveSped = 7f;
+    [SerializeField] private float rotateSpeed = 10f;
 
     private void Update()
     {
@@ -22,5 +23,12 @@ public class Player : MonoBehaviour
         var movementVector = new Vector3(inputVector.x, 0f, inputVector.y);
 
         transform.position += movementVector * moveSped * Time.deltaTime;
+
+        SetRotation(movementVector);
     }
+
+
+    private void SetRotation(Vector3 direction) =>
+        transform.forward = Vector3.Slerp(transform.forward, direction, Time.deltaTime * rotateSpeed);
+
 }
