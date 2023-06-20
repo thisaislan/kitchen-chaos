@@ -6,19 +6,12 @@ public class Player : MonoBehaviour
     [SerializeField] private float moveSped = 7f;
     [SerializeField] private float rotateSpeed = 10f;
 
+    [SerializeField] private GameInput gameInput;
+
     private bool isWalking;
 
-    private void Update()
-    {
-        var inputVector = Vector2.zero;
-
-        if (Input.GetKey(KeyCode.W)) { inputVector.y++; }
-        if (Input.GetKey(KeyCode.S)) { inputVector.y--; }
-        if (Input.GetKey(KeyCode.A)) { inputVector.x--; }
-        if (Input.GetKey(KeyCode.D)) { inputVector.x++; }
-
-        SetMovement(inputVector.normalized);
-    }
+    private void Update() =>
+        SetMovement(gameInput.GetMovementVectorNormalized());
 
     private void SetMovement(Vector2 inputVector) 
     {
