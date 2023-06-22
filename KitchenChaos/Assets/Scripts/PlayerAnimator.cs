@@ -8,6 +8,6 @@ public class PlayerAnimator : MonoBehaviour
     [SerializeField] private Animator animator;
 
     private void Update() =>
-        animator.SetBool(IS_WALKING, player.IsWalking());
+        animator.SetBool(IS_WALKING, player.IsWalking);
 
 }
