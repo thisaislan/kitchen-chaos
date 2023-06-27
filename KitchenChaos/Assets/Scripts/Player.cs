@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -8,17 +9,44 @@ public class Player : MonoBehaviour
 
     [SerializeField] private float playerRadius = 0.7f;
     [SerializeField] private float playerHeight = 2f;
+    [SerializeField] private float interactDistance = 2f;
 
     [SerializeField] private GameInput gameInput;
+    [SerializeField] private LayerMask countersLayerMask;
+
+    private Vector3 lastInteractDirection;
 
     public bool IsWalking { get; private set; }
 
-    private void Update() =>
-        SetMovement(gameInput.GetMovementVectorNormalized());
-
-    private void SetMovement(Vector2 inputVector)
+    private void Update()
     {
-        var directionVector = new Vector3(inputVector.x, 0f, inputVector.y);
+        var directionVector = GetDirectionVector(gameInput.GetMovementVectorNormalized());
+
+        HandleMovement(directionVector);
+        HandleInteractions(directionVector);
+    }
+
+    private Vector3 GetDirectionVector(Vector2 inputVector) =>
+        new Vector3(inputVector.x, 0f, inputVector.y);
+
+    private void HandleInteractions(Vector3 directionVector)
+    {
+        if (directionVector != Vector3.zero)
+        {
+            lastInteractDirection = directionVector;
+        }
+
+        if (Physics.Raycast(transform.position, lastInteractDirection, out RaycastHit raycastHit, interactDistance, countersLayerMask))
+        {
+            if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
+            {
+                clearCounter.Interact();
+            }            
+        }
+    }
+
+    private void HandleMovement(Vector3 directionVector)
+    {        
         var movementDistance = movementSpeed * Time.deltaTime;
         var movementDirection = GetMovementDirection(directionVector, movementDistance);
 
