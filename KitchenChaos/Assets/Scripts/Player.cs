@@ -3,6 +3,14 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public static Player Instance { get; private set; }
+
+    public event EventHandler<OnSelectedChangedEventArgs> OnSelectedCounterChanged;
+
+    public class OnSelectedChangedEventArgs : EventArgs
+    {
+        public ClearCounter SelectedClearCounter;
+    }
 
     [SerializeField] private float movementSpeed = 7f;
     [SerializeField] private float rotateSpeed = 10f;
@@ -14,9 +22,25 @@ public class Player : MonoBehaviour
     [SerializeField] private GameInput gameInput;
     [SerializeField] private LayerMask countersLayerMask;
 
+    [SerializeField] private ClearCounter selectedClearCounter;
+
     private Vector3 lastInteractDirection;
 
     public bool IsWalking { get; private set; }
+
+    private void Awake()
+    {
+        if (Instance == null) { Instance = this; }
+        else { Debug.LogError("There are more then one istance of the player"); }
+    }
+
+    private void Start()
+    {
+        gameInput.OnInteractAction += GameInputOnInteractAction;
+    }
+
+    private void GameInputOnInteractAction(object sender, EventArgs e) =>
+         selectedClearCounter?.Interact();
 
     private void Update()
     {
@@ -40,9 +64,26 @@ public class Player : MonoBehaviour
         {
             if (raycastHit.transform.TryGetComponent(out ClearCounter clearCounter))
             {
-                clearCounter.Interact();
-            }            
+                if (selectedClearCounter != clearCounter) 
+                {
+                    SetSelectedCounter(clearCounter);
+
+                    return;
+                }
+            }
         }
+
+        SetSelectedCounter();
+    }
+
+    private void SetSelectedCounter(ClearCounter selectedCounter = null)
+    {
+        selectedClearCounter = selectedCounter;
+
+        OnSelectedCounterChanged?.Invoke(this, new OnSelectedChangedEventArgs
+        {
+            SelectedClearCounter = this.selectedClearCounter
+        }) ;
     }
 
     private void HandleMovement(Vector3 directionVector)
