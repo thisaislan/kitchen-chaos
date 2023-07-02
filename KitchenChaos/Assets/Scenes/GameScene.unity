@@ -935,6 +935,7 @@ MonoBehaviour:
   countersLayerMask:
     serializedVersion: 2
     m_Bits: 64
+  selectedClearCounter: {fileID: 0}
 --- !u!4 &1718462819
 Transform:
   m_ObjectHideFlags: 0
@@ -969,7 +970,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c25fe63248e71f4195870641810bfce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 1718462818}
   animator: {fileID: 696679950}
 --- !u!1 &2110361257
 GameObject:
