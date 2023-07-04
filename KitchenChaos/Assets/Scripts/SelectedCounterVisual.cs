@@ -11,6 +11,11 @@ public class SelectedCounterVisual : MonoBehaviour
         Player.Instance.OnSelectedCounterChanged += OnPlayerSelectedCounterChanged;
     }
 
+    private void OnDestroy()
+    {
+        Player.Instance.OnSelectedCounterChanged -= OnPlayerSelectedCounterChanged;
+    }
+
     private void OnPlayerSelectedCounterChanged(object sender, Player.OnSelectedChangedEventArgs playerEventArgs) =>
         SetVisualActive(playerEventArgs.SelectedClearCounter == clearCounter);
 

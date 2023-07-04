@@ -15,6 +15,11 @@ public class GameInput : MonoBehaviour
         playerInputActions.Player.Interact.performed += PlayerInteractPerformed;
     }
 
+    private void OnDestroy()
+    {
+        playerInputActions.Player.Interact.started -= PlayerInteractPerformed;
+    }
+
     private void PlayerInteractPerformed(UnityEngine.InputSystem.InputAction.CallbackContext obj) =>
         OnInteractAction?.Invoke(this, EventArgs.Empty);
 

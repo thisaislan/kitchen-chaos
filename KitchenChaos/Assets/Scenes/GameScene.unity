@@ -548,6 +548,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5758468823949550563, guid: 4740474d127d5044a9490e508174ed35,
+        type: 3}
+      propertyPath: kitchenObjectScriptableObject
+      value: 
+      objectReference: {fileID: 11400000, guid: 5aabc11b162a3a344b14692a523f0d72,
+        type: 2}
     - target: {fileID: 8039206223825622792, guid: 4740474d127d5044a9490e508174ed35,
         type: 3}
       propertyPath: m_Name
@@ -897,6 +903,37 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 1, y: 0, z: 0}
+--- !u!1 &1574908703
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1574908704}
+  m_Layer: 0
+  m_Name: KitchenObjectHoldPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1574908704
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1574908703}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.3, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1718462819}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1718462817
 GameObject:
   m_ObjectHideFlags: 0
@@ -935,7 +972,7 @@ MonoBehaviour:
   countersLayerMask:
     serializedVersion: 2
     m_Bits: 64
-  selectedClearCounter: {fileID: 0}
+  kitchenObjectHoldPoint: {fileID: 1574908703}
 --- !u!4 &1718462819
 Transform:
   m_ObjectHideFlags: 0
@@ -948,6 +985,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1574908704}
   - {fileID: 1798788184}
   m_Father: {fileID: 0}
   m_RootOrder: 4
@@ -971,6 +1009,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 696679950}
+  player: {fileID: 1718462818}
 --- !u!1 &2110361257
 GameObject:
   m_ObjectHideFlags: 0
@@ -1078,6 +1117,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5758468823949550563, guid: 4740474d127d5044a9490e508174ed35,
+        type: 3}
+      propertyPath: kitchenObjectScriptableObject
+      value: 
+      objectReference: {fileID: 11400000, guid: e1690361b91df5b4ba889a1af7f507a3,
+        type: 2}
     - target: {fileID: 8039206223825622792, guid: 4740474d127d5044a9490e508174ed35,
         type: 3}
       propertyPath: m_Name
