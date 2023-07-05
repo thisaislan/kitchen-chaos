@@ -48,6 +48,14 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         gameInput.OnInteractAction -= GameInputOnInteractAction;
     }
 
+    private void Update()
+    {
+        var directionVector = GetDirectionVector(gameInput.GetMovementVectorNormalized());
+
+        HandleMovement(directionVector);
+        HandleInteractions(directionVector);
+    }
+
     public void ClearKitchenObject() =>
         kitchenObject = null;
 
@@ -63,13 +71,8 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     private void GameInputOnInteractAction(object sender, EventArgs e) =>
          selectedClearCounter?.Interact(this);
 
-    private void Update()
-    {
-        var directionVector = GetDirectionVector(gameInput.GetMovementVectorNormalized());
-
-        HandleMovement(directionVector);
-        HandleInteractions(directionVector);
-    }
+    public KitchenObject GetKitchenObject() =>
+        kitchenObject;
 
     private Vector3 GetDirectionVector(Vector2 inputVector) =>
         new Vector3(inputVector.x, 0f, inputVector.y);

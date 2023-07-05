@@ -11,4 +11,6 @@ public interface IKitchenObjectParent
 
     public bool HasKitchenObject();
 
+    public KitchenObject GetKitchenObject();
+
 }
