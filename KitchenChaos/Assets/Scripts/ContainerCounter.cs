@@ -9,10 +9,13 @@ public class ContainerCounter : BaseCounter, IKitchenObjectParent
 
     public override void Interact(Player player)
     {
-        var kitchenObjectNewInstance = Instantiate(kitchenObjectScriptableObject.prefab);
-        kitchenObjectNewInstance.GetComponent<KitchenObject>().SetKitchenObjecPatent(player);
+        if (!player.HasKitchenObject())
+        {
+            var kitchenObjectNewInstance = Instantiate(kitchenObjectScriptableObject.prefab);
+            kitchenObjectNewInstance.GetComponent<KitchenObject>().SetKitchenObjecPatent(player);
 
-        OnPlayerGrabbedObject?.Invoke(this, EventArgs.Empty);
+            OnPlayerGrabbedObject?.Invoke(this, EventArgs.Empty);
+        }
     }
 
 }
