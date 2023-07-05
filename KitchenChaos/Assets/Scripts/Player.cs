@@ -88,16 +88,21 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         {
             if (raycastHit.transform.TryGetComponent(out BaseCounter counter))
             {
-                if (selectedClearCounter != counter) 
+                if (selectedClearCounter != counter)
                 {
                     SetSelectedCounter(counter);
-
-                    return;
                 }
             }
+            else 
+            {
+                SetSelectedCounter();
+            }
+        }
+        else
+        {
+            SetSelectedCounter();
         }
 
-        SetSelectedCounter();
     }
 
     private void SetSelectedCounter(BaseCounter selectedCounter = null)
