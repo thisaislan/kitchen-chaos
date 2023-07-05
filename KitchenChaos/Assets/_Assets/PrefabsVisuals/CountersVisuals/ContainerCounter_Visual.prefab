@@ -92,7 +92,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4589716710238282923}
-  - component: {fileID: 6289625630049244101}
+  - component: {fileID: 7684268026793733507}
   m_Layer: 0
   m_Name: ContainerCounter_Visual
   m_TagString: Untagged
@@ -109,8 +109,8 @@ Transform:
   m_GameObject: {fileID: 4589716710238282922}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.01, y: 1.01, z: 1.01}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7435700601653309397}
   - {fileID: 8811907506445549660}
@@ -119,7 +119,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &6289625630049244101
+--- !u!95 &7684268026793733507
 Animator:
   serializedVersion: 5
   m_ObjectHideFlags: 0
@@ -139,6 +139,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &5261771210811040880
 GameObject:
   m_ObjectHideFlags: 0
