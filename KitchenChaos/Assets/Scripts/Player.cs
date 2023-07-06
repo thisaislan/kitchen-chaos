@@ -160,12 +160,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     private void SetRotation(Vector3 direction) =>
         transform.forward = Vector3.Slerp(transform.forward, direction, Time.deltaTime * rotateSpeed);
 
-    private void SetMovement(Vector3 movementDirection, float movementDistance)
-    {
-        if (movementDirection != Vector3.zero)
-        {
-            transform.position += movementDirection * movementDistance;
-        }
-    }
+    private void SetMovement(Vector3 movementDirection, float movementDistance) =>
+        transform.position += movementDirection * movementDistance;
 
 }
