@@ -40,12 +40,14 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     private void Start()
     {
-        gameInput.OnInteractAction += GameInputOnInteractAction;
+        gameInput.OnInteractAction += OnGameInputInteractAction;
+        gameInput.OnInteractAlternateAction += OnGameInputInteractAlternateAction;
     }
 
     private void OnDestroy()
     {
-        gameInput.OnInteractAction -= GameInputOnInteractAction;
+        gameInput.OnInteractAction -= OnGameInputInteractAction;
+        gameInput.OnInteractAlternateAction -= OnGameInputInteractAlternateAction;
     }
 
     private void Update()
@@ -68,8 +70,11 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     public void SetKitchenObject(KitchenObject kitchenObject) =>
         this.kitchenObject = kitchenObject;
 
-    private void GameInputOnInteractAction(object sender, EventArgs e) =>
+    private void OnGameInputInteractAction(object sender, EventArgs e) =>
          selectedClearCounter?.Interact(this);
+
+    private void OnGameInputInteractAlternateAction(object sender, EventArgs e) =>
+        selectedClearCounter?.InteractAlternate(this);
 
     public KitchenObject GetKitchenObject() =>
         kitchenObject;

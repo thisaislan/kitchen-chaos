@@ -11,8 +11,8 @@ public class ContainerCounter : BaseCounter, IKitchenObjectParent
     {
         if (!player.HasKitchenObject())
         {
-            var kitchenObjectNewInstance = Instantiate(kitchenObjectScriptableObject.prefab);
-            kitchenObjectNewInstance.GetComponent<KitchenObject>().SetKitchenObjecPatent(player);
+            var kitchenObject = KitchenObject.SpawnKitchenObject(kitchenObjectScriptableObject, player);
+            kitchenObject.SetKitchenObjecPatent(player);
 
             OnPlayerGrabbedObject?.Invoke(this, EventArgs.Empty);
         }
