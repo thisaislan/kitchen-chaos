@@ -3,8 +3,19 @@ using UnityEngine;
 
 public class CuttingCounter : BaseCounter
 {
+    public event EventHandler OnCut;
+
+    public event EventHandler<OnProgressChangedEventArgs> OnProgressChanged;
+
+    public class OnProgressChangedEventArgs : EventArgs
+    {
+        public float ProgressNormalized;
+    }
+
 
     [SerializeField] private CuttingRecipeScriptableObject[] cuttingRecipeScriptableObjects;
+
+    private int cuttingCount;
 
     public override void Interact(Player player)
     {
@@ -15,6 +26,9 @@ public class CuttingCounter : BaseCounter
                 if (HasRecipeWithInput(player.GetKitchenObject().GetKitchenObjectScriptableObject()))
                 {
                     player.GetKitchenObject().SetKitchenObjecPatent(this);
+
+                    CleanCuttingCount();
+                    InvokeOnProgressChanged(0);
                 }
             }
         }
@@ -23,6 +37,9 @@ public class CuttingCounter : BaseCounter
             if (!player.HasKitchenObject())
             {
                 GetKitchenObject().SetKitchenObjecPatent(player);
+
+                CleanCuttingCount();
+                InvokeOnProgressChanged(0);
             }
         }
     }
@@ -36,10 +53,32 @@ public class CuttingCounter : BaseCounter
 
             if (newCurrentKitchenObject != null)
             {
-                currentKitchenObject.DesttoySelf();
-                KitchenObject.SpawnKitchenObject(newCurrentKitchenObject.output, this);
+                cuttingCount++;
+
+                OnCut?.Invoke(this, EventArgs.Empty);
+
+                InvokeOnProgressChanged((float)cuttingCount / newCurrentKitchenObject.cuttingProgressMax);
+
+                if (cuttingCount >= newCurrentKitchenObject.cuttingProgressMax)
+                {
+                    currentKitchenObject.DesttoySelf();
+                    KitchenObject.SpawnKitchenObject(newCurrentKitchenObject.output, this);
+
+                    CleanCuttingCount();
+                }
             }
         }
+    }
+
+    private void CleanCuttingCount() =>
+        cuttingCount = 0;
+
+    private void InvokeOnProgressChanged(float progressNormalized)
+    {
+        OnProgressChanged?.Invoke(this, new OnProgressChangedEventArgs
+        {
+            ProgressNormalized = progressNormalized
+        });
     }
 
     private bool HasRecipeWithInput(KitchenObjectScriptableObject kitchenObjectScriptableObject) =>
