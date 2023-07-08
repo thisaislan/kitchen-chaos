@@ -6,13 +6,17 @@ using static CuttingCounter;
 
 public class ProgressBarUI : MonoBehaviour
 {
-
-    [SerializeField] private CuttingCounter cuttingCounter;
+        
+    [SerializeField] GameObject hasProgressGameObject;
     [SerializeField] private Image barImage;
+
+    private IHasProgress hasProgress;
 
     private void Start()
     {
-        cuttingCounter.OnProgressChanged += CuttingCounterOnProgressChangedEvent;
+        hasProgress = hasProgressGameObject.GetComponent<IHasProgress>();
+
+        hasProgress.OnProgressChanged += OnHasProgressChangedEvent;
 
         barImage.fillAmount = 0;
 
@@ -21,12 +25,12 @@ public class ProgressBarUI : MonoBehaviour
 
     private void OnDestroy()
     {
-        cuttingCounter.OnProgressChanged -= CuttingCounterOnProgressChangedEvent;
+        hasProgress.OnProgressChanged -= OnHasProgressChangedEvent;
     }
 
-    private void CuttingCounterOnProgressChangedEvent(
+    private void OnHasProgressChangedEvent(
             object sender,
-            CuttingCounter.OnProgressChangedEventArgs onProgressChangedEventArgs
+            IHasProgress.OnProgressChangedEventArgs onProgressChangedEventArgs
         )
     {
         barImage.fillAmount = onProgressChangedEventArgs.ProgressNormalized;
