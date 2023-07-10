@@ -43,7 +43,7 @@ public class StoveCounter : BaseCounter, IHasProgress
             if (!player.HasKitchenObject())
             {
                 GetKitchenObject().SetKitchenObjecPatent(player);
-                
+
                 CleanFryingTimer();
                 BurningFryingTimer();
                 InvokeOnProgressChanged(0);
@@ -51,6 +51,24 @@ public class StoveCounter : BaseCounter, IHasProgress
                 OnStoveTurnOff?.Invoke(this, EventArgs.Empty);
 
                 StopAllCoroutines();
+            }
+            else
+            {
+                if (player.GetKitchenObject().TryGetPlate(out var plateKitchenObject))
+                {
+                    if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectScriptableObject()))
+                    {
+                        GetKitchenObject().DesttoySelf();
+
+                        CleanFryingTimer();
+                        BurningFryingTimer();
+                        InvokeOnProgressChanged(0);
+
+                        OnStoveTurnOff?.Invoke(this, EventArgs.Empty);
+
+                        StopAllCoroutines();
+                    }
+                }
             }
         }
     }
