@@ -13,7 +13,7 @@ public class PlateKitchenObject : KitchenObject
 
     [SerializeField] private List<KitchenObjectScriptableObject> validJitchenObjectScriptableObjects;
 
-    private List<KitchenObjectScriptableObject> kitchenObjectScriptableObjects = new();
+    public List<KitchenObjectScriptableObject> kitchenObjectScriptableObjects { get; private set; } = new();
 
     public bool TryAddIngredient(KitchenObjectScriptableObject kitchenObjectScriptableObject)
     {
