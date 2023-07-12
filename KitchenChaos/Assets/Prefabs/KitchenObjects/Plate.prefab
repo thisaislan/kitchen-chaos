@@ -206,13 +206,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   kitchenObjectScriptableObject: {fileID: 11400000, guid: 3cf6ad41daa2f1447afbd81f492cadd7,
     type: 2}
-  validJitchenObjectScriptableObjects:
+  validKitchenObjectScriptableObjects:
+  - {fileID: 11400000, guid: 4690f623f2b858b40a3360fde683e078, type: 2}
   - {fileID: 11400000, guid: ee475758618fade4b80c78dbc4c0dbaf, type: 2}
   - {fileID: 11400000, guid: 1e538bfbd5edd974ca290d00080bf1a1, type: 2}
   - {fileID: 11400000, guid: bcfbd3c7b17cec1489b2074cd3d65e5e, type: 2}
   - {fileID: 11400000, guid: a9b37f7dc20de8e44be385ee00db0ac2, type: 2}
   - {fileID: 11400000, guid: 9343f168d34ba2941b671094e01715a5, type: 2}
-  - {fileID: 11400000, guid: 4690f623f2b858b40a3360fde683e078, type: 2}
 --- !u!1 &3596390963108325702
 GameObject:
   m_ObjectHideFlags: 0

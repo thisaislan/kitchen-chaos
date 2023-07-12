@@ -11,14 +11,14 @@ public class PlateKitchenObject : KitchenObject
         public KitchenObjectScriptableObject kitchenObjectScriptableObject;
     }
 
-    [SerializeField] private List<KitchenObjectScriptableObject> validJitchenObjectScriptableObjects;
+    [SerializeField] private List<KitchenObjectScriptableObject> validKitchenObjectScriptableObjects;
 
     public List<KitchenObjectScriptableObject> kitchenObjectScriptableObjects { get; private set; } = new();
 
     public bool TryAddIngredient(KitchenObjectScriptableObject kitchenObjectScriptableObject)
     {
         if (kitchenObjectScriptableObjects.Contains(kitchenObjectScriptableObject) ||
-            !validJitchenObjectScriptableObjects.Contains(kitchenObjectScriptableObject))
+            !validKitchenObjectScriptableObjects.Contains(kitchenObjectScriptableObject))
         {
             return false;
         }
