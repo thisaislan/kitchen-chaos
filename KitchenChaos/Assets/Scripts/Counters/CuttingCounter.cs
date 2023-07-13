@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class CuttingCounter : BaseCounter, IHasProgress
 {
+    public static event EventHandler OnAnyCut;
+
     public event EventHandler OnCut;
 
     public event EventHandler<IHasProgress.OnProgressChangedEventArgs> OnProgressChanged;
@@ -60,6 +62,7 @@ public class CuttingCounter : BaseCounter, IHasProgress
                 cuttingCount++;
 
                 OnCut?.Invoke(this, EventArgs.Empty);
+                CuttingCounter.OnAnyCut?.Invoke(this, EventArgs.Empty);
 
                 InvokeOnProgressChanged((float)cuttingCount / newCurrentKitchenObject.cuttingProgressMax);
 

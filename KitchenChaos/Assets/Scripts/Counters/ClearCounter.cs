@@ -1,7 +1,10 @@
+using System;
 using UnityEngine;
 
 public class ClearCounter : BaseCounter
 {
+
+    public static event EventHandler OnAnyPlaceKitchenObject;
 
     [SerializeField] private KitchenObjectScriptableObject kitchenObjectScriptableObject;
 
@@ -12,6 +15,7 @@ public class ClearCounter : BaseCounter
             if (player.HasKitchenObject())
             {
                 player.GetKitchenObject().SetKitchenObjecPatent(this);
+                OnAnyPlaceKitchenObject?.Invoke(this, EventArgs.Empty);
             }
         }
         else

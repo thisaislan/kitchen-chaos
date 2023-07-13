@@ -9,6 +9,8 @@ public class DeliveryManager : MonoBehaviour
 {
     public event EventHandler OnNewRecipe;
     public event EventHandler OnDelivery;
+    public event EventHandler OnRecipeSuccess;
+    public event EventHandler OnRecipeFailed;
 
     public static DeliveryManager Instance { get; private set; }
 
@@ -39,6 +41,11 @@ public class DeliveryManager : MonoBehaviour
             waitingRecipeScriptableObjects.Remove(recipeScriptableObjectDelivered);
 
             OnDelivery?.Invoke(this, EventArgs.Empty);
+            OnRecipeSuccess?.Invoke(this, EventArgs.Empty);
+        }
+        else
+        {
+            OnRecipeFailed?.Invoke(this, EventArgs.Empty);
         }
     }
 

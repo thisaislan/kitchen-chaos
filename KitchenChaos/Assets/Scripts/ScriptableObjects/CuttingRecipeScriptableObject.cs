@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "CuttingRecipe", menuName = "Kitchen Chaos/CuttingRecipe")]
+[CreateAssetMenu(fileName = "CuttingRecipe", menuName = "Kitchen Chaos/Cutting Recipe")]
 public class CuttingRecipeScriptableObject : ScriptableObject
 {
 

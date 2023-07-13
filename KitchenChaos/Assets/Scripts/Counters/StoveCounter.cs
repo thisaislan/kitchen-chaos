@@ -142,6 +142,8 @@ public class StoveCounter : BaseCounter, IHasProgress
 
                 KitchenObject.SpawnKitchenObject(burningRecipeScriptableObject.output, this);
 
+                OnStoveTurnOff?.Invoke(this, EventArgs.Empty);
+
                 break;
             }
 
