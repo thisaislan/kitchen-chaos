@@ -76,11 +76,21 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         OnPickedSomething?.Invoke(this, EventArgs.Empty);
     }
 
-    private void OnGameInputInteractAction(object sender, EventArgs e) =>
-         selectedClearCounter?.Interact(this);
+    private void OnGameInputInteractAction(object sender, EventArgs e)
+    {
+        if (GameManager.Instance.State == GameManager.GameState.GamePalying)
+        {
+            selectedClearCounter?.Interact(this);
+        }
+    }
 
-    private void OnGameInputInteractAlternateAction(object sender, EventArgs e) =>
-        selectedClearCounter?.InteractAlternate(this);
+    private void OnGameInputInteractAlternateAction(object sender, EventArgs e)
+    {
+        if (GameManager.Instance.State == GameManager.GameState.GamePalying)
+        {
+            selectedClearCounter?.InteractAlternate(this);
+        }
+    }
 
     public KitchenObject GetKitchenObject() =>
         kitchenObject;
