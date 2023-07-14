@@ -18,9 +18,12 @@ public class DeliveryManager : MonoBehaviour
 
     public List<RecipeScriptableObject> waitingRecipeScriptableObjects { get; private set; } = new List<RecipeScriptableObject>();
 
+    public int successfulRecipesAmount { get; private set; } = 0;
+
     private float spawnRecipeTimerMax = 4;
 
     private int waityingSpawnRecipeMax = 4;
+
 
     private void Awake()
     {
@@ -42,6 +45,8 @@ public class DeliveryManager : MonoBehaviour
 
             OnDelivery?.Invoke(this, EventArgs.Empty);
             OnRecipeSuccess?.Invoke(this, EventArgs.Empty);
+
+            successfulRecipesAmount++;
         }
         else
         {

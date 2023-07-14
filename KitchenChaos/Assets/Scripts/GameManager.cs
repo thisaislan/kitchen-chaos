@@ -22,9 +22,9 @@ public class GameManager : MonoBehaviour
     public float CountdownToStartTimer { get; private set; }  = 3f;
 
     private float waitingToStartTimer = 1f;
-    private float gamePalyingTimer = 10f;
+    private float gamePalyingTimer;
 
-
+    private float gamePalyingTimerMax = 10f;
 
     private void Awake()
     {
@@ -41,6 +41,8 @@ public class GameManager : MonoBehaviour
 
                 if (waitingToStartTimer < 0f)
                 {
+                    gamePalyingTimer = gamePalyingTimerMax;
+
                     State = GameState.CountdownToStart;
                     OnStateChanged?.Invoke(this, EventArgs.Empty);
                 }
@@ -73,7 +75,10 @@ public class GameManager : MonoBehaviour
 
             case GameState.GameOver:
                 break;
-        }   
+        }
     }
+
+    public float GetGamePlayTimeNormalized() =>
+        1 - (gamePalyingTimer / gamePalyingTimerMax);
 
 }
