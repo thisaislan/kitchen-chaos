@@ -9,6 +9,9 @@ public class GameStartCountdownUI : MonoBehaviour
     void Start() =>
         GameManager.Instance.OnStateChanged += OnGameManagerStateChanged;
 
+    private void OnDestroy() =>
+        GameManager.Instance.OnStateChanged -= OnGameManagerStateChanged;
+
     private void Update() =>
         countdownText.text = Mathf.Ceil(GameManager.Instance.CountdownToStartTimer).ToString();
 

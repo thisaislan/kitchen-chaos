@@ -13,6 +13,12 @@ public class StoveCounterSound : MonoBehaviour
         stoveCounter.OnStoveTurnOff += OnStoveCounterTurnOff;
     }
 
+    private void OnDestroy()
+    {
+        stoveCounter.OnStoveTurnOn -= OnStoveCounterTurnOn;
+        stoveCounter.OnStoveTurnOff -= OnStoveCounterTurnOff;
+    }
+
     private void OnStoveCounterTurnOff(object sender, System.EventArgs e) =>
         audioSource.Pause();
 

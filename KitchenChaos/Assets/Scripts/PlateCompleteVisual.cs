@@ -20,6 +20,11 @@ public class PlateCompleteVisual : MonoBehaviour
         plateKitchenObject.OnIngridientAddedEvent += OnPlateKitchenObjectIngridientAddedEvent;
     }
 
+    private void OnDestroy()
+    {
+        plateKitchenObject.OnIngridientAddedEvent -= OnPlateKitchenObjectIngridientAddedEvent;
+    }
+
     private void OnPlateKitchenObjectIngridientAddedEvent(object sender, PlateKitchenObject.OnIngredientEventArgs e) =>
         GetKitchenObjectScriptableObjectGameObject(e.kitchenObjectScriptableObject).gameObject.SetActive(true);
 

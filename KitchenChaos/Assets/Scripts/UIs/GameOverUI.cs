@@ -7,8 +7,11 @@ public class GameOverUI : MonoBehaviour
     [SerializeField] GameObject gameOverConteiner;
     [SerializeField] TextMeshProUGUI recipesDelivered;
 
-    void Start() =>
+    private void Start() =>
         GameManager.Instance.OnStateChanged += OnGameManagerStateChanged;
+
+    private void OnDestroy() =>
+        GameManager.Instance.OnStateChanged -= OnGameManagerStateChanged;
 
     private void OnGameManagerStateChanged(object sender, System.EventArgs e)
     {

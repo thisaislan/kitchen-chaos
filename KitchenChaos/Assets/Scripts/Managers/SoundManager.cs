@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class SoundManager : MonoBehaviour
@@ -20,6 +21,16 @@ public class SoundManager : MonoBehaviour
         Player.Instance.OnPickedSomething += OnPlayerPickedSomething;
         ClearCounter.OnAnyPlaceKitchenObject += OnClearCounterPlaceKitchenObject;
         TrashCounter.OnAnyObjectTrashed += OnTrashCounterAnyObjectTrashed;
+    }
+
+    private void OnDestroy()
+    {
+        DeliveryManager.Instance.OnRecipeSuccess -= OnDeliveryManagerRecipeSuccess;
+        DeliveryManager.Instance.OnRecipeFailed -= OnDeliveryManagerRecipeFailed;
+        CuttingCounter.OnAnyCut -= OnCuttingCounterOnAnyCut;
+        Player.Instance.OnPickedSomething -= OnPlayerPickedSomething;
+        ClearCounter.OnAnyPlaceKitchenObject -= OnClearCounterPlaceKitchenObject;
+        TrashCounter.OnAnyObjectTrashed -= OnTrashCounterAnyObjectTrashed;
     }
 
     private void OnTrashCounterAnyObjectTrashed(object sender, System.EventArgs e) =>
