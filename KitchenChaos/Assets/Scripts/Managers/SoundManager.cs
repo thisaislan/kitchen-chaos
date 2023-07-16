@@ -71,7 +71,7 @@ public class SoundManager : MonoBehaviour
 
         if (volume > 1) { volume = 0; }
 
-        PlayerPrefs.SetFloat(SOUND_VULOME, volume);        
+        PlayerPrefs.SetFloat(SOUND_VULOME, volume);
     }
 
 }

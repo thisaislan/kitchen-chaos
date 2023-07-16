@@ -1,4 +1,5 @@
 using TMPro;
+using UnityEditor.Experimental;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,8 +14,26 @@ public class OptionsUI : MonoBehaviour
     [SerializeField] private Button musicButton;
     [SerializeField] private Button closeButton;
 
+    [SerializeField] private Button moveUpButton;
+    [SerializeField] private Button moveDownButton;
+    [SerializeField] private Button moveLeftButton;
+    [SerializeField] private Button moveRightButton;
+    [SerializeField] private Button interactButton;
+    [SerializeField] private Button interactAlternativeButton;
+    [SerializeField] private Button pauseButton;
+
+    [SerializeField] private TextMeshProUGUI moveUpText;
+    [SerializeField] private TextMeshProUGUI moveDownText;
+    [SerializeField] private TextMeshProUGUI moveLeftText;
+    [SerializeField] private TextMeshProUGUI moveRightText;
+    [SerializeField] private TextMeshProUGUI interactText;
+    [SerializeField] private TextMeshProUGUI interactAlternativeText;
+    [SerializeField] private TextMeshProUGUI pauseText;
+
     [SerializeField] private TextMeshProUGUI soundEffectsMenuButtonText;
     [SerializeField] private TextMeshProUGUI musicButtonText;
+    
+    [SerializeField] private GameObject pressToRebindContainer;
 
     private void Awake()
     {
@@ -33,6 +52,25 @@ public class OptionsUI : MonoBehaviour
         });
 
         closeButton.onClick.AddListener(() => Hide());
+
+        moveUpButton.onClick.AddListener(() =>
+        {
+            ShowPressToRebind();
+        });
+
+        moveUpButton.onClick.AddListener(() => RebindingBiding(GameInput.Biding.MoveUp));
+
+        moveDownButton.onClick.AddListener(() => RebindingBiding(GameInput.Biding.MoveDown));
+
+        moveLeftButton.onClick.AddListener(() => RebindingBiding(GameInput.Biding.MoveLeft));
+
+        moveRightButton.onClick.AddListener(() => RebindingBiding(GameInput.Biding.MoveRight));
+
+        interactButton.onClick.AddListener(() => RebindingBiding(GameInput.Biding.Interact));
+
+        interactAlternativeButton.onClick.AddListener(() => RebindingBiding(GameInput.Biding.InteractAlternative));
+
+        pauseButton.onClick.AddListener(() => RebindingBiding(GameInput.Biding.Pause));
     }
 
     private void Start()
@@ -40,6 +78,15 @@ public class OptionsUI : MonoBehaviour
         UpdateVisuals();
 
         GameManager.Instance.OnTogglePause += OnGameManagerTogglePause;
+    }
+
+    private void RebindingBiding(GameInput.Biding biding)
+    {
+        ShowPressToRebind();
+        GameInput.Instance.RebindingBiding(biding, () => {
+            UpdateVisuals();
+            HidePressToRebind();
+        }) ;
     }
 
     private void OnGameManagerTogglePause(object sender, System.EventArgs e)
@@ -51,6 +98,15 @@ public class OptionsUI : MonoBehaviour
     {
         soundEffectsMenuButtonText.text = $"Sound Effects: {Mathf.Round(SoundManager.Instance.volume * 10f)}";
         musicButtonText.text = $"Music: {Mathf.Round(MusicManager.Instance.volume * 10f)}";
+
+        moveUpText.text = GameInput.Instance.GetBidingText(GameInput.Biding.MoveUp);
+        moveDownText.text = GameInput.Instance.GetBidingText(GameInput.Biding.MoveDown);
+        moveLeftText.text = GameInput.Instance.GetBidingText(GameInput.Biding.MoveLeft);
+        moveRightText.text = GameInput.Instance.GetBidingText(GameInput.Biding.MoveRight);
+        interactText.text = GameInput.Instance.GetBidingText(GameInput.Biding.Interact);
+        interactAlternativeText.text = GameInput.Instance.GetBidingText(GameInput.Biding.InteractAlternative);
+        pauseText.text = GameInput.Instance.GetBidingText(GameInput.Biding.Pause);
+
     }
 
     public void Show() =>
@@ -58,5 +114,11 @@ public class OptionsUI : MonoBehaviour
 
     public void Hide() =>
         optionsConteiner.SetActive(false);
+
+    public void ShowPressToRebind() =>
+        pressToRebindContainer.SetActive(true);
+
+    public void HidePressToRebind() =>
+        pressToRebindContainer.SetActive(false);
 
 }
