@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class SoundManager : MonoBehaviour
@@ -8,9 +7,15 @@ public class SoundManager : MonoBehaviour
 
     [SerializeField] private AudioClipRefsScriptableObject audioClipRefsScriptableObjects;
 
+    private const string SOUND_VULOME = "sound_volume";
+
+    public float volume { get; private set; }  = 1f;
+
     private void Awake()
     { 
-        Instance = this; 
+        Instance = this;
+
+        volume = PlayerPrefs.GetFloat(SOUND_VULOME, volume);
     }
 
     private void Start()
@@ -54,10 +59,19 @@ public class SoundManager : MonoBehaviour
     private void PlaySound(AudioClip[] audioClips, Vector3 position, float volume = 1f) =>
         PlaySound(audioClips[UnityEngine.Random.Range(0, audioClips.Length)], position, volume);
 
-    private void PlaySound(AudioClip audioClip, Vector3 position, float volume = 1f) =>
-        AudioSource.PlayClipAtPoint(audioClip, position, volume);
+    private void PlaySound(AudioClip audioClip, Vector3 position, float volumeMultiplier = 1f) =>
+        AudioSource.PlayClipAtPoint(audioClip, position, volumeMultiplier * volume);
 
     public void PlayFootstepSound(Vector3 position, float volume = 1f) =>
        PlaySound(audioClipRefsScriptableObjects.footstep, position, volume);
+
+    public void ChangeVolume()
+    {
+        volume += 0.1f;
+
+        if (volume > 1) { volume = 0; }
+
+        PlayerPrefs.SetFloat(SOUND_VULOME, volume);        
+    }
 
 }
