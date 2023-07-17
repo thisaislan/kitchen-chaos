@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEditor.Experimental;
 using UnityEngine;
@@ -9,7 +10,7 @@ public class OptionsUI : MonoBehaviour
     public static OptionsUI Instance { get; private set; }
 
     [SerializeField] GameObject optionsConteiner;
-        
+
     [SerializeField] private Button soundEffectsMenuButton;
     [SerializeField] private Button musicButton;
     [SerializeField] private Button closeButton;
@@ -21,6 +22,9 @@ public class OptionsUI : MonoBehaviour
     [SerializeField] private Button interactButton;
     [SerializeField] private Button interactAlternativeButton;
     [SerializeField] private Button pauseButton;
+    [SerializeField] private Button gamepadInteractButton;
+    [SerializeField] private Button gamepadInteractAlternativeButton;
+    [SerializeField] private Button gamepadPauseButton;
 
     [SerializeField] private TextMeshProUGUI moveUpText;
     [SerializeField] private TextMeshProUGUI moveDownText;
@@ -29,11 +33,16 @@ public class OptionsUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI interactText;
     [SerializeField] private TextMeshProUGUI interactAlternativeText;
     [SerializeField] private TextMeshProUGUI pauseText;
+    [SerializeField] private TextMeshProUGUI gamepadInteractText;
+    [SerializeField] private TextMeshProUGUI gamepadInteractAlternativeText;
+    [SerializeField] private TextMeshProUGUI gamepadPauseText;
 
     [SerializeField] private TextMeshProUGUI soundEffectsMenuButtonText;
     [SerializeField] private TextMeshProUGUI musicButtonText;
-    
+
     [SerializeField] private GameObject pressToRebindContainer;
+
+    private Action onCloseAction;
 
     private void Awake()
     {
@@ -51,13 +60,11 @@ public class OptionsUI : MonoBehaviour
             UpdateVisuals();
         });
 
-        closeButton.onClick.AddListener(() => Hide());
-
-        moveUpButton.onClick.AddListener(() =>
-        {
-            ShowPressToRebind();
+        closeButton.onClick.AddListener(() => {
+            Hide();
+            onCloseAction.Invoke();
         });
-
+          
         moveUpButton.onClick.AddListener(() => RebindingBiding(GameInput.Biding.MoveUp));
 
         moveDownButton.onClick.AddListener(() => RebindingBiding(GameInput.Biding.MoveDown));
@@ -71,6 +78,12 @@ public class OptionsUI : MonoBehaviour
         interactAlternativeButton.onClick.AddListener(() => RebindingBiding(GameInput.Biding.InteractAlternative));
 
         pauseButton.onClick.AddListener(() => RebindingBiding(GameInput.Biding.Pause));
+
+        gamepadInteractButton.onClick.AddListener(() => RebindingBiding(GameInput.Biding.GamepadInteract));
+
+        gamepadInteractAlternativeButton.onClick.AddListener(() => RebindingBiding(GameInput.Biding.GamepadInteractAlternative));
+
+        gamepadPauseButton.onClick.AddListener(() => RebindingBiding(GameInput.Biding.GamepadPause));
     }
 
     private void Start()
@@ -86,7 +99,7 @@ public class OptionsUI : MonoBehaviour
         GameInput.Instance.RebindingBiding(biding, () => {
             UpdateVisuals();
             HidePressToRebind();
-        }) ;
+        });
     }
 
     private void OnGameManagerTogglePause(object sender, System.EventArgs e)
@@ -106,17 +119,30 @@ public class OptionsUI : MonoBehaviour
         interactText.text = GameInput.Instance.GetBidingText(GameInput.Biding.Interact);
         interactAlternativeText.text = GameInput.Instance.GetBidingText(GameInput.Biding.InteractAlternative);
         pauseText.text = GameInput.Instance.GetBidingText(GameInput.Biding.Pause);
+        gamepadInteractText.text = GameInput.Instance.GetBidingText(GameInput.Biding.GamepadInteract);
+        gamepadInteractAlternativeText.text = GameInput.Instance.GetBidingText(GameInput.Biding.GamepadInteractAlternative);
+        gamepadPauseText.text = GameInput.Instance.GetBidingText(GameInput.Biding.GamepadPause);
 
     }
 
-    public void Show() =>
+    public void Show(Action onCloseAction)
+    {
+        this.onCloseAction = onCloseAction;
+
         optionsConteiner.SetActive(true);
+
+        soundEffectsMenuButton.Select();
+    }
 
     public void Hide() =>
         optionsConteiner.SetActive(false);
 
-    public void ShowPressToRebind() =>
+    public void ShowPressToRebind()
+    {
         pressToRebindContainer.SetActive(true);
+
+        moveUpButton.Select();
+    }
 
     public void HidePressToRebind() =>
         pressToRebindContainer.SetActive(false);

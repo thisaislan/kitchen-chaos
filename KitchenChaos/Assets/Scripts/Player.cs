@@ -154,8 +154,8 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         if (!canMove)
         {
             var movementDirectionX = new Vector3(directionVector.x, 0, 0).normalized;
-
-            canMove = CanMove(movementDirectionX, movementDistance);
+            
+            canMove = CanMove(movementDirectionX, directionVector.x, movementDistance);
 
             if (canMove)
             {
@@ -165,7 +165,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
             {
                 var movementDirectionZ = new Vector3(0, 0, directionVector.z).normalized;
 
-                canMove = CanMove(movementDirectionZ, movementDistance);
+                canMove = CanMove(movementDirectionZ, directionVector.z, movementDistance);
 
                 if (canMove) { directionVector = movementDirectionZ; }
                 else { return Vector3.zero; }
@@ -174,6 +174,9 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
         return directionVector;
     }
+
+    private bool CanMove(Vector3 direction, float axis, float distance) =>
+        (axis < -0.4f || axis > +0.4f) && CanMove(direction, distance);
 
     private bool CanMove(Vector3 direction, float distance) =>
         !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, direction, distance);

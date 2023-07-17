@@ -13,7 +13,10 @@ public class GameInput : MonoBehaviour
         MoveRight,
         Interact,
         InteractAlternative,
-        Pause
+        Pause,
+        GamepadInteract,
+        GamepadInteractAlternative,
+        GamepadPause
     }
 
     public static GameInput Instance { get; private set; }
@@ -88,6 +91,12 @@ public class GameInput : MonoBehaviour
                 return playerInputActions.Player.InteractAlternate.bindings[0].ToDisplayString();
             case Biding.Pause:
                 return playerInputActions.Player.Pause.bindings[0].ToDisplayString();
+            case Biding.GamepadInteract:
+                return playerInputActions.Player.Interact.bindings[1].ToDisplayString();
+            case Biding.GamepadInteractAlternative:
+                return playerInputActions.Player.InteractAlternate.bindings[1].ToDisplayString();
+            case Biding.GamepadPause:
+                return playerInputActions.Player.Pause.bindings[1].ToDisplayString();
         }
     }
 
@@ -102,23 +111,23 @@ public class GameInput : MonoBehaviour
             case Biding.MoveUp:
                 inputAction = playerInputActions.Player.Move;
                 bidingIndex = 1;
-        break;
+                break;
             case Biding.MoveDown:
                 inputAction = playerInputActions.Player.Move;
                 bidingIndex = 2;
-        break;
+                break;
             case Biding.MoveLeft:
                 inputAction = playerInputActions.Player.Move;
                 bidingIndex = 3;
-        break;
+                break;
             case Biding.MoveRight:
                 inputAction = playerInputActions.Player.Move;
                 bidingIndex = 4;
-        break;
+                break;
             case Biding.Interact:
                 inputAction = playerInputActions.Player.Interact;
                 bidingIndex = 0;
-        break;
+                break;
             case Biding.InteractAlternative:
                 inputAction = playerInputActions.Player.InteractAlternate;
                 bidingIndex = 0;
@@ -126,6 +135,18 @@ public class GameInput : MonoBehaviour
             case Biding.Pause:
                 inputAction = playerInputActions.Player.Pause;
                 bidingIndex = 0;
+                break;
+            case Biding.GamepadInteract:
+                inputAction = playerInputActions.Player.Interact;
+                bidingIndex = 1;
+                break;
+            case Biding.GamepadInteractAlternative:
+                inputAction = playerInputActions.Player.InteractAlternate;
+                bidingIndex = 1;
+                break;
+            case Biding.GamepadPause:
+                inputAction = playerInputActions.Player.Pause;
+                bidingIndex = 1;
                 break;
         }
 
