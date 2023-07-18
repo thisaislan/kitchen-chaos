@@ -78,7 +78,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     private void OnGameInputInteractAction(object sender, EventArgs e)
     {
-        if (GameManager.Instance.State == GameManager.GameState.GamePalying)
+        if (GameManager.Instance.State == GameManager.GameState.GamePlaying)
         {
             selectedClearCounter?.Interact(this);
         }
@@ -86,7 +86,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     private void OnGameInputInteractAlternateAction(object sender, EventArgs e)
     {
-        if (GameManager.Instance.State == GameManager.GameState.GamePalying)
+        if (GameManager.Instance.State == GameManager.GameState.GamePlaying)
         {
             selectedClearCounter?.InteractAlternate(this);
         }

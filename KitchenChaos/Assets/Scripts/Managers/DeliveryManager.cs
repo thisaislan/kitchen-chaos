@@ -72,9 +72,11 @@ public class DeliveryManager : MonoBehaviour
 
     private IEnumerator StarSpawnRecipeTimer()
     {
+        yield return new WaitUntil(() => GameManager.Instance.State == GameManager.GameState.GamePlaying);
+
         while (true)
-        {
-            yield return new WaitForSeconds(spawnRecipeTimerMax);            
+        {   
+            yield return new WaitForSeconds(spawnRecipeTimerMax);
 
             if (waitingRecipeScriptableObjects.Count < waityingSpawnRecipeMax)
             {

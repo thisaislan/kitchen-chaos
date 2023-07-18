@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     {
         WaitingToStart,
         CountdownToStart,
-        GamePalying,
+        GamePlaying,
         GameOver
     }
 
@@ -24,7 +24,6 @@ public class GameManager : MonoBehaviour
 
     public bool IsGamePaused { get; private set; }
 
-    private float waitingToStartTimer = 1f;
     private float gamePalyingTimer;
 
     private float gamePalyingTimerMax = 10f;
@@ -37,32 +36,34 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         GameInput.Instance.OnPauseAction += OnGameInputPauseAction;
+        GameInput.Instance.OnInteractAction += OnGameInputInteractAction;
     }
 
     private void OnDestroy()
     {
         GameInput.Instance.OnPauseAction -= OnGameInputPauseAction;
+        GameInput.Instance.OnInteractAction -= OnGameInputInteractAction;
     }
 
     private void OnGameInputPauseAction(object sender, EventArgs e) =>
         ToglePauseGame();
+
+    private void OnGameInputInteractAction(object sender, EventArgs e)
+    {
+        if (State == GameState.WaitingToStart)
+        {
+            gamePalyingTimer = gamePalyingTimerMax;
+            State = GameState.CountdownToStart;
+            OnStateChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
+
 
     private void Update()
     {
         switch (State)
         {
             case GameState.WaitingToStart:
-
-                waitingToStartTimer -= Time.deltaTime;
-
-                if (waitingToStartTimer < 0f)
-                {
-                    gamePalyingTimer = gamePalyingTimerMax;
-
-                    State = GameState.CountdownToStart;
-                    OnStateChanged?.Invoke(this, EventArgs.Empty);
-                }
-
                 break;
 
             case GameState.CountdownToStart:
@@ -71,13 +72,13 @@ public class GameManager : MonoBehaviour
 
                 if (CountdownToStartTimer < 0f)
                 {
-                    State = GameState.GamePalying;
+                    State = GameState.GamePlaying;
                     OnStateChanged?.Invoke(this, EventArgs.Empty);
                 }
 
                 break;
 
-            case GameState.GamePalying:
+            case GameState.GamePlaying:
 
                 gamePalyingTimer -= Time.deltaTime;
 

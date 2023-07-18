@@ -20,18 +20,21 @@ public class PlatesCounter : BaseCounter
     
     private void Update()
     {
-        spawnPlateTimer += Time.deltaTime;
-
-        if (spawnPlateTimer >= spawnPlateTimerMax)
+        if (GameManager.Instance.State == GameManager.GameState.GamePlaying)
         {
-            spawnPlateTimer = 0;
+            spawnPlateTimer += Time.deltaTime;
 
-            if (platesSpawnedAmount < platesSpawnedAmountMax)
+            if (spawnPlateTimer >= spawnPlateTimerMax)
             {
-                platesSpawnedAmount++;
+                spawnPlateTimer = 0;
 
-                OnPlateSpwned?.Invoke(this, EventArgs.Empty);
-            }            
+                if (platesSpawnedAmount < platesSpawnedAmountMax)
+                {
+                    platesSpawnedAmount++;
+
+                    OnPlateSpwned?.Invoke(this, EventArgs.Empty);
+                }
+            }
         }
     }
 
