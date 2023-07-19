@@ -15,6 +15,8 @@ public class StoveCounter : BaseCounter, IHasProgress
     [SerializeField] private FryingRecipeScriptableObject[] fryingRecipeScriptableObjects;
     [SerializeField] private BurningRecipeScriptableObject[] burningRecipeScriptableObjects;
 
+    public bool IsBurning { get => burningTimer > 0; }
+
     private float fryingTimer;
     private float burningTimer;
 
@@ -151,5 +153,5 @@ public class StoveCounter : BaseCounter, IHasProgress
         }
 
     }
-
+    
 }

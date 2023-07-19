@@ -23,7 +23,7 @@ public class GameStartCountdownUI : MonoBehaviour
         {
             countdownText.text = currentCountdownNumber.ToString();
             animator.SetTrigger(NUMBER_POPUP_TRIGGER);
-            SoundManager.Instance.PlayCountDownSound();
+            SoundManager.Instance.PlayCountdownSound();
         }
     }
 

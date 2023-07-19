@@ -515,7 +515,7 @@ PrefabInstance:
     - target: {fileID: 3159990282437934438, guid: bedf2a2c0cbbc8944b8be0335ca02054,
         type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 3159990282437934438, guid: bedf2a2c0cbbc8944b8be0335ca02054,
         type: 3}
@@ -759,6 +759,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ProgressBarUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 1425621667325748285, guid: 3e04251fd503feb49bd064d61d0462d5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5383100225339114751, guid: 3e04251fd503feb49bd064d61d0462d5,
         type: 3}
