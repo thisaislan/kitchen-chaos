@@ -20,13 +20,15 @@ public class GameManager : MonoBehaviour
 
     public GameState State { get; private set; } = GameState.WaitingToStart;
 
-    public float CountdownToStartTimer { get; private set; }  = 3f;
+    // TODO - To start game automatically
+    public float CountdownToStartTimer { get; private set; }  = 1f;
 
     public bool IsGamePaused { get; private set; }
 
     private float gamePalyingTimer;
 
-    private float gamePalyingTimerMax = 10f;
+    // TODO - To have more time
+    private float gamePalyingTimerMax = 1000f;
 
     private void Awake()
     {
@@ -37,6 +39,9 @@ public class GameManager : MonoBehaviour
     {
         GameInput.Instance.OnPauseAction += OnGameInputPauseAction;
         GameInput.Instance.OnInteractAction += OnGameInputInteractAction;
+
+        // TODO - To start game automatically
+        State = GameState.CountdownToStart;
     }
 
     private void OnDestroy()

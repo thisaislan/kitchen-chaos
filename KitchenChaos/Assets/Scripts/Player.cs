@@ -1,9 +1,10 @@
 using System;
+using Unity.Netcode;
 using UnityEngine;
 
-public class Player : MonoBehaviour, IKitchenObjectParent
+public class Player : NetworkBehaviour, IKitchenObjectParent
 {
-    public static Player Instance { get; private set; }
+ //   public static Player Instance { get; private set; }
 
     public event EventHandler OnPickedSomething;
 
@@ -20,8 +21,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     [SerializeField] private float playerRadius = 0.7f;
     [SerializeField] private float playerHeight = 2f;
     [SerializeField] private float interactDistance = 2f;
-
-    [SerializeField] private GameInput gameInput;
+        
     [SerializeField] private LayerMask countersLayerMask;
     
     [SerializeField] private GameObject kitchenObjectHoldPoint;
@@ -36,28 +36,31 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     private void Awake()
     {
-        if (Instance == null) { Instance = this; }
-        else { Debug.LogError("There are more then one istance of the player"); }
+       // if (Instance == null) { Instance = this; }
+        //else { Debug.LogError("There are more then one istance of the player"); }
     }
 
     private void Start()
     {
-        gameInput.OnInteractAction += OnGameInputInteractAction;
-        gameInput.OnInteractAlternateAction += OnGameInputInteractAlternateAction;
+        GameInput.Instance.OnInteractAction += OnGameInputInteractAction;
+        GameInput.Instance.OnInteractAlternateAction += OnGameInputInteractAlternateAction;
     }
 
     private void OnDestroy()
     {
-        gameInput.OnInteractAction -= OnGameInputInteractAction;
-        gameInput.OnInteractAlternateAction -= OnGameInputInteractAlternateAction;
+        GameInput.Instance.OnInteractAction -= OnGameInputInteractAction;
+        GameInput.Instance.OnInteractAlternateAction -= OnGameInputInteractAlternateAction;
     }
 
     private void Update()
     {
-        var directionVector = GetDirectionVector(gameInput.GetMovementVectorNormalized());
+        if (IsOwner)
+        { 
+            var directionVector = GetDirectionVector(GameInput.Instance.GetMovementVectorNormalized());
 
-        HandleMovement(directionVector);
-        HandleInteractions(directionVector);
+            HandleMovement(directionVector);
+            HandleInteractions(directionVector);
+        }
     }
 
     public void ClearKitchenObject() =>
