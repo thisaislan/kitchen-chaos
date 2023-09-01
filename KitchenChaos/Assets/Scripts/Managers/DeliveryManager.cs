@@ -2,10 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class DeliveryManager : MonoBehaviour
+public class DeliveryManager : NetworkBehaviour
 {
     public event EventHandler OnNewRecipe;
     public event EventHandler OnDelivery;
@@ -32,8 +33,45 @@ public class DeliveryManager : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(StarSpawnRecipeTimer());
+        // TODO remove this later
+        //if (IsServer)
+        //{
+            StartCoroutine(StarSpawnRecipeTimer());
+      //  }
     }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void DelivertyCorrectRecipeServerRpc(int recipeIndex) =>
+        DelivertyCorrectRecipeClientRpc(recipeIndex);
+
+    [ServerRpc(RequireOwnership = false)]
+    private void DelivertyIncorrectRecipeServerRpc() =>
+        DelivertyIncorrectRecipeClientRpc();
+
+    [ClientRpc]
+    private void SpawnNewRecipeClientRpc(int waitingRecipeScriptableObjectsIndex)
+    {
+        var waitingRecipe = recipeListScriptableObject.recipeScriptableObjects[waitingRecipeScriptableObjectsIndex];
+
+        waitingRecipeScriptableObjects.Add(waitingRecipe);
+
+        OnNewRecipe?.Invoke(this, EventArgs.Empty);
+    }
+
+    [ClientRpc]
+    private void DelivertyCorrectRecipeClientRpc(int recipeIndex)
+    {
+        waitingRecipeScriptableObjects.RemoveAt(recipeIndex);
+
+        OnDelivery?.Invoke(this, EventArgs.Empty);
+        OnRecipeSuccess?.Invoke(this, EventArgs.Empty);
+
+        successfulRecipesAmount++;
+    }
+
+    [ClientRpc]
+    private void DelivertyIncorrectRecipeClientRpc() =>
+        OnRecipeFailed?.Invoke(this, EventArgs.Empty);
 
     public void DeliveryRecipe(PlateKitchenObject plateKitchenObject)
     {
@@ -41,16 +79,14 @@ public class DeliveryManager : MonoBehaviour
 
         if (recipeScriptableObjectDelivered != null)
         {
-            waitingRecipeScriptableObjects.Remove(recipeScriptableObjectDelivered);
-
-            OnDelivery?.Invoke(this, EventArgs.Empty);
-            OnRecipeSuccess?.Invoke(this, EventArgs.Empty);
-
-            successfulRecipesAmount++;
+            DelivertyCorrectRecipeServerRpc(waitingRecipeScriptableObjects.FindIndex(
+                    recipeScriptableObject => recipeScriptableObject.recipeName.Equals(recipeScriptableObjectDelivered.recipeName)
+                    )
+                );
         }
         else
         {
-            OnRecipeFailed?.Invoke(this, EventArgs.Empty);
+            DelivertyIncorrectRecipeServerRpc();
         }
     }
 
@@ -71,8 +107,13 @@ public class DeliveryManager : MonoBehaviour
     }
 
     private IEnumerator StarSpawnRecipeTimer()
-    {
+    {           
         yield return new WaitUntil(() => GameManager.Instance.State == GameManager.GameState.GamePlaying);
+
+        // TODO remove this later
+        if (!IsHost) {
+            yield return null;
+        }
 
         while (true)
         {   
@@ -80,11 +121,7 @@ public class DeliveryManager : MonoBehaviour
 
             if (waitingRecipeScriptableObjects.Count < waityingSpawnRecipeMax)
             {
-                var waitingRecipe = recipeListScriptableObject.recipeScriptableObjects[UnityEngine.Random.Range(0, recipeListScriptableObject.recipeScriptableObjects.Count)];
-
-                waitingRecipeScriptableObjects.Add(waitingRecipe);
-
-                OnNewRecipe?.Invoke(this, EventArgs.Empty);
+                SpawnNewRecipeClientRpc(UnityEngine.Random.Range(0, recipeListScriptableObject.recipeScriptableObjects.Count));                
             }
         }
     }

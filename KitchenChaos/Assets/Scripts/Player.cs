@@ -46,10 +46,12 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
         GameInput.Instance.OnInteractAlternateAction += OnGameInputInteractAlternateAction;
     }
 
-    private void OnDestroy()
+    public override void OnDestroy()
     {
         GameInput.Instance.OnInteractAction -= OnGameInputInteractAction;
         GameInput.Instance.OnInteractAlternateAction -= OnGameInputInteractAlternateAction;
+
+        base.OnDestroy();
     }
 
     private void Update()
