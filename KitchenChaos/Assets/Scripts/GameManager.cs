@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviour
         GameInput.Instance.OnInteractAction += OnGameInputInteractAction;
 
         // TODO - To start game automatically
-        State = GameState.CountdownToStart;
+        State = GameState.WaitingToStart;
     }
 
     private void OnDestroy()
