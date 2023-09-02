@@ -8,16 +8,36 @@ public class SelectedCounterVisual : MonoBehaviour
 
     void Start()
     {
-       // Player.Instance.OnSelectedCounterChanged += OnPlayerSelectedCounterChanged;
+        if (Player.LocalInstance != null)
+        {
+            SetOnPlayerSelectedCounterChanged();
+        }
+        else
+        {
+            Player.OnAnyPlayerSpawn += OnPlayerAnyPlayerSpawn;
+        }
+    }
+
+    private void OnPlayerAnyPlayerSpawn(object sender, System.EventArgs e)
+    {
+        SetOnPlayerSelectedCounterChanged();
+        RemoveSetOnPlayerAnyPlayerSpawn();
     }
 
     private void OnDestroy()
     {
-      //  Player.Instance.OnSelectedCounterChanged -= OnPlayerSelectedCounterChanged;
+        Player.OnAnyPlayerSpawn -= OnPlayerAnyPlayerSpawn;
+        RemoveSetOnPlayerAnyPlayerSpawn();
     }
 
     private void OnPlayerSelectedCounterChanged(object sender, Player.OnSelectedChangedEventArgs playerEventArgs) =>
         SetVisualActive(playerEventArgs.SelectedCounter == counter);
+
+    private void SetOnPlayerSelectedCounterChanged() =>
+        Player.LocalInstance.OnSelectedCounterChanged += OnPlayerSelectedCounterChanged;
+
+    private void RemoveSetOnPlayerAnyPlayerSpawn() =>
+        Player.LocalInstance.OnSelectedCounterChanged -= OnPlayerAnyPlayerSpawn;
 
     private void SetVisualActive(bool active)
     {
@@ -27,5 +47,4 @@ public class SelectedCounterVisual : MonoBehaviour
         }
     }
         
-
 }

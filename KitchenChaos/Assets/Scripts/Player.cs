@@ -4,12 +4,15 @@ using UnityEngine;
 
 public class Player : NetworkBehaviour, IKitchenObjectParent
 {
- //   public static Player Instance { get; private set; }
+    public static Player LocalInstance { get; private set; }
+
+    public static event EventHandler OnAnyPlayerSpawn;
+    public static event EventHandler OnAnyPickedSomething;
 
     public event EventHandler OnPickedSomething;
 
     public event EventHandler<OnSelectedChangedEventArgs> OnSelectedCounterChanged;
-
+    
     public class OnSelectedChangedEventArgs : EventArgs
     {
         public BaseCounter SelectedCounter;
@@ -34,10 +37,14 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
 
     private KitchenObject kitchenObject;
 
-    private void Awake()
+    public override void OnNetworkSpawn()
     {
-       // if (Instance == null) { Instance = this; }
-        //else { Debug.LogError("There are more then one istance of the player"); }
+        if (IsOwner)
+        {
+            LocalInstance = this;
+        }
+
+        OnAnyPlayerSpawn?.Invoke(this, EventArgs.Empty);
     }
 
     private void Start()
@@ -79,6 +86,7 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
         this.kitchenObject = kitchenObject;
 
         OnPickedSomething?.Invoke(this, EventArgs.Empty);
+        OnAnyPickedSomething?.Invoke(this, EventArgs.Empty);
     }
 
     private void OnGameInputInteractAction(object sender, EventArgs e)
