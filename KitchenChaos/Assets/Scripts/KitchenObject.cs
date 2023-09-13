@@ -1,27 +1,25 @@
+using Unity.Netcode;
 using UnityEngine;
 
-public class KitchenObject : MonoBehaviour
+public class KitchenObject : NetworkBehaviour
 {
 
     [SerializeField] private KitchenObjectScriptableObject kitchenObjectScriptableObject;
 
     public IKitchenObjectParent kitchenObjectParent { get; private set; }
 
-    public static KitchenObject SpawnKitchenObject(
+    public static void SpawnKitchenObject(
         KitchenObjectScriptableObject kitchenObjectScriptableObject,
         IKitchenObjectParent kitchenObjectParent
         )
     {
-        var kitchenObject = Instantiate(kitchenObjectScriptableObject.prefab).GetComponent<KitchenObject>();
-        kitchenObject.SetKitchenObjecPatent(kitchenObjectParent);
-
-        return kitchenObject;
+        KitchenGameMultiplayer.Instance.SpawnKitchenObject(kitchenObjectScriptableObject, kitchenObjectParent);
     }
 
     public KitchenObjectScriptableObject GetKitchenObjectScriptableObject() =>
         kitchenObjectScriptableObject;
 
-    public void SetKitchenObjecPatent(IKitchenObjectParent kitchenObjectParent)
+    public void SetKitchenObjecParent(IKitchenObjectParent kitchenObjectParent)
     {
         this.kitchenObjectParent?.ClearKitchenObject();
 
@@ -29,8 +27,8 @@ public class KitchenObject : MonoBehaviour
 
         kitchenObjectParent.SetKitchenObject(this);
         
-        transform.parent = kitchenObjectParent.GetKitchenObjectFollowTransform();
-        transform.localPosition = Vector3.zero;
+       // transform.parent = kitchenObjectParent.GetKitchenObjectFollowTransform();
+       // transform.localPosition = Vector3.zero;
     }
 
     public void DesttoySelf() 

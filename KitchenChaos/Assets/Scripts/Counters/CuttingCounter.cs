@@ -21,7 +21,7 @@ public class CuttingCounter : BaseCounter, IHasProgress
             {
                 if (HasRecipeWithInput(player.GetKitchenObject().GetKitchenObjectScriptableObject()))
                 {
-                    player.GetKitchenObject().SetKitchenObjecPatent(this);
+                    player.GetKitchenObject().SetKitchenObjecParent(this);
 
                     CleanCuttingCount();
                     InvokeOnProgressChanged(0);
@@ -32,7 +32,7 @@ public class CuttingCounter : BaseCounter, IHasProgress
         {
             if (!player.HasKitchenObject())
             {
-                GetKitchenObject().SetKitchenObjecPatent(player);
+                GetKitchenObject().SetKitchenObjecParent(player);
 
                 CleanCuttingCount();
                 InvokeOnProgressChanged(0);

@@ -14,7 +14,7 @@ public class ClearCounter : BaseCounter
         {
             if (player.HasKitchenObject())
             {
-                player.GetKitchenObject().SetKitchenObjecPatent(this);
+                player.GetKitchenObject().SetKitchenObjecParent(this);
                 OnAnyPlaceKitchenObject?.Invoke(this, EventArgs.Empty);
             }
         }
@@ -22,7 +22,7 @@ public class ClearCounter : BaseCounter
         {
             if (!player.HasKitchenObject())
             {
-                GetKitchenObject().SetKitchenObjecPatent(player);
+                GetKitchenObject().SetKitchenObjecParent(player);
             }
             else
             {

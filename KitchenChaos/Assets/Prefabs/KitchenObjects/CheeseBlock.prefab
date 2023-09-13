@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1801707525462588786}
   - component: {fileID: -5522847441738965935}
+  - component: {fileID: -4065611849655313745}
   m_Layer: 0
   m_Name: CheeseBlock
   m_TagString: Untagged
@@ -47,6 +48,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   kitchenObjectScriptableObject: {fileID: 11400000, guid: e1690361b91df5b4ba889a1af7f507a3,
     type: 2}
+--- !u!114 &-4065611849655313745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1072506251723035314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1001 &2413444145450818045
 PrefabInstance:
   m_ObjectHideFlags: 0

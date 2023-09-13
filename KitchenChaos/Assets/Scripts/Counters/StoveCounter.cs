@@ -28,7 +28,7 @@ public class StoveCounter : BaseCounter, IHasProgress
             {
                 if (HasFryingRecipeWithInput(player.GetKitchenObject().GetKitchenObjectScriptableObject()))
                 {
-                    player.GetKitchenObject().SetKitchenObjecPatent(this);
+                    player.GetKitchenObject().SetKitchenObjecParent(this);
                     
                     CleanFryingTimer();
                     BurningFryingTimer();
@@ -44,7 +44,7 @@ public class StoveCounter : BaseCounter, IHasProgress
         {
             if (!player.HasKitchenObject())
             {
-                GetKitchenObject().SetKitchenObjecPatent(player);
+                GetKitchenObject().SetKitchenObjecParent(player);
 
                 CleanFryingTimer();
                 BurningFryingTimer();

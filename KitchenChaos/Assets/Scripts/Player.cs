@@ -108,6 +108,10 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
     public KitchenObject GetKitchenObject() =>
         kitchenObject;
 
+
+    public NetworkObject GetNetworkObject() =>
+        NetworkObject;
+
     private Vector3 GetDirectionVector(Vector2 inputVector) =>
         new Vector3(inputVector.x, 0f, inputVector.y);
 
