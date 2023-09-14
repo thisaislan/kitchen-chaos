@@ -2,7 +2,7 @@ using System;
 using Unity.Netcode;
 using UnityEngine;
 
-public class BaseCounter : MonoBehaviour, IKitchenObjectParent
+public class BaseCounter : NetworkBehaviour, IKitchenObjectParent
 {
 
     [SerializeField] protected GameObject topPoint;
@@ -24,11 +24,8 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
     public KitchenObject GetKitchenObject() =>
         kitchenObject;
 
-    public NetworkObject GetNetworkObject()
-    {
-        //TODO - change this later
-        return null;
-    }
+    public NetworkObject GetNetworkObject() =>
+        NetworkObject;
 
     public virtual void Interact(Player player) { }
 

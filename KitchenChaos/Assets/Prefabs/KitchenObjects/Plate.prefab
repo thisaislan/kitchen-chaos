@@ -168,6 +168,7 @@ GameObject:
   - component: {fileID: 1801707525462588786}
   - component: {fileID: 5276550720098091694}
   - component: {fileID: 8238830381319073325}
+  - component: {fileID: -2792152842602635498}
   m_Layer: 0
   m_Name: Plate
   m_TagString: Untagged
@@ -207,6 +208,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   kitchenObjectScriptableObject: {fileID: 11400000, guid: 3cf6ad41daa2f1447afbd81f492cadd7,
     type: 2}
+  followTransform: {fileID: -2792152842602635498}
   validKitchenObjectScriptableObjects:
   - {fileID: 11400000, guid: 4690f623f2b858b40a3360fde683e078, type: 2}
   - {fileID: 11400000, guid: ee475758618fade4b80c78dbc4c0dbaf, type: 2}
@@ -233,6 +235,18 @@ MonoBehaviour:
   SceneMigrationSynchronization: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!114 &-2792152842602635498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1072506251723035314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d481f4c8b61d63d419f5a76447468c9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3596390963108325702
 GameObject:
   m_ObjectHideFlags: 0
