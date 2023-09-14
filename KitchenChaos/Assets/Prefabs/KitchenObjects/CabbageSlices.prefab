@@ -49,8 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   kitchenObjectScriptableObject: {fileID: 11400000, guid: ee475758618fade4b80c78dbc4c0dbaf,
     type: 2}
-  followTransform: {fileID: -6285275354437823022, guid: 215eec696741e734ea1ac8385d62a648,
-    type: 3}
+  followTransform: {fileID: -7993743127601118055}
 --- !u!114 &7180255097509991934
 MonoBehaviour:
   m_ObjectHideFlags: 0
