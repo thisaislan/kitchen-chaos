@@ -1,4 +1,5 @@
 using System;
+using Unity.Netcode;
 using UnityEngine;
 
 public class CuttingCounter : BaseCounter, IHasProgress
@@ -23,8 +24,7 @@ public class CuttingCounter : BaseCounter, IHasProgress
                 {
                     player.GetKitchenObject().SetKitchenObjecParent(this);
 
-                    CleanCuttingCount();
-                    InvokeOnProgressChanged(0);
+                    InteractLogicServerRpc();
                 }
             }
         }
@@ -34,16 +34,15 @@ public class CuttingCounter : BaseCounter, IHasProgress
             {
                 GetKitchenObject().SetKitchenObjecParent(player);
 
-                CleanCuttingCount();
-                InvokeOnProgressChanged(0);
+                InteractLogicServerRpc();
             }
             else
             {
                 if (player.GetKitchenObject().TryGetPlate(out var plateKitchenObject))
                 {
                     if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectScriptableObject()))
-                    {
-                        GetKitchenObject().DesttoySelf();
+                    {                        
+                        KitchenObject.DestroyKitchenObject(GetKitchenObject());
                     }
                 }
             }
@@ -54,27 +53,52 @@ public class CuttingCounter : BaseCounter, IHasProgress
     {
         if (HasKitchenObject())
         {
-            var currentKitchenObject = GetKitchenObject();
-            var newCurrentKitchenObject = GetCuttingRecipe(currentKitchenObject.GetKitchenObjectScriptableObject());
+            CuttingKitchenObjectServerRpc();
+        }
+    }
 
-            if (newCurrentKitchenObject != null)
+    [ServerRpc(RequireOwnership = false)]
+    private void CuttingKitchenObjectServerRpc() =>
+        CuttingKitchenObjectClientRpc();
+
+    [ServerRpc(RequireOwnership = false)]
+    private void InteractLogicServerRpc() =>
+        InteractLogicClientRpc();
+
+    [ClientRpc]
+    private void CuttingKitchenObjectClientRpc()
+    {
+        var currentKitchenObject = GetKitchenObject();
+        var newCurrentKitchenObject = GetCuttingRecipe(currentKitchenObject.GetKitchenObjectScriptableObject());
+
+        if (newCurrentKitchenObject != null)
+        {
+            cuttingCount++;
+
+            OnCut?.Invoke(this, EventArgs.Empty);
+            CuttingCounter.OnAnyCut?.Invoke(this, EventArgs.Empty);
+
+            InvokeOnProgressChanged((float)cuttingCount / newCurrentKitchenObject.cuttingProgressMax);
+
+            if (cuttingCount >= newCurrentKitchenObject.cuttingProgressMax)
             {
-                cuttingCount++;
+                KitchenObject.DestroyKitchenObject(currentKitchenObject);
 
-                OnCut?.Invoke(this, EventArgs.Empty);
-                CuttingCounter.OnAnyCut?.Invoke(this, EventArgs.Empty);
-
-                InvokeOnProgressChanged((float)cuttingCount / newCurrentKitchenObject.cuttingProgressMax);
-
-                if (cuttingCount >= newCurrentKitchenObject.cuttingProgressMax)
+                if (IsServer)
                 {
-                    currentKitchenObject.DesttoySelf();
                     KitchenObject.SpawnKitchenObject(newCurrentKitchenObject.output, this);
-
-                    CleanCuttingCount();
                 }
+
+                CleanCuttingCount();
             }
         }
+    }
+
+    [ClientRpc]
+    private void InteractLogicClientRpc()
+    {
+        CleanCuttingCount();
+        InvokeOnProgressChanged(0);
     }
 
     private void CleanCuttingCount() =>
