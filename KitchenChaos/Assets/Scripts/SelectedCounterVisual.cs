@@ -20,8 +20,11 @@ public class SelectedCounterVisual : MonoBehaviour
 
     private void OnPlayerAnyPlayerSpawn(object sender, System.EventArgs e)
     {
-        SetOnPlayerSelectedCounterChanged();
-        RemoveSetOnPlayerAnyPlayerSpawn();
+        if (Player.LocalInstance != null)
+        {
+            SetOnPlayerSelectedCounterChanged();
+            RemoveSetOnPlayerAnyPlayerSpawn();
+        }
     }
 
     private void OnDestroy()
