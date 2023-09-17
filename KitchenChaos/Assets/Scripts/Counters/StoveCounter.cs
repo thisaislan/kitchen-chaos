@@ -60,7 +60,7 @@ public class StoveCounter : BaseCounter, IHasProgress
                 {
                     if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectScriptableObject()))
                     {
-                        GetKitchenObject().DesttoySelf();
+                        GetKitchenObject().DestroySelf();
 
                         CleanFryingTimer();
                         BurningFryingTimer();
@@ -113,7 +113,7 @@ public class StoveCounter : BaseCounter, IHasProgress
             {
                 InvokeOnProgressChanged(0);
 
-                GetKitchenObject().DesttoySelf();
+                GetKitchenObject().DestroySelf();
 
                 KitchenObject.SpawnKitchenObject(fryingRecipeScriptableObject.output, this);
 
@@ -140,7 +140,7 @@ public class StoveCounter : BaseCounter, IHasProgress
             {
                 InvokeOnProgressChanged(0);
 
-                GetKitchenObject().DesttoySelf();
+                GetKitchenObject().DestroySelf();
 
                 KitchenObject.SpawnKitchenObject(burningRecipeScriptableObject.output, this);
 

@@ -42,7 +42,7 @@ public class KitchenObject : NetworkBehaviour
     public void SetKitchenObjecParent(IKitchenObjectParent kitchenObjectParent) =>
         SetKitchenObjectParentServerRpc(kitchenObjectParent.GetNetworkObject());
 
-    public void DesttoySelf() =>
+    public void DestroySelf() =>
         Destroy(gameObject);
 
 

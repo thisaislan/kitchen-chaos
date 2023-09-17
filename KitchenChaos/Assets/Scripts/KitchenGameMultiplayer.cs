@@ -35,7 +35,7 @@ public class KitchenGameMultiplayer : NetworkBehaviour
         if (kitchenObjectNetworkObjectReference.TryGet(out NetworkObject kitchenObjectNetworkObject))
         {
             ClearKicthenObjectOnParantClientRpc(kitchenObjectNetworkObjectReference);
-            kitchenObjectNetworkObject.GetComponent<KitchenObject>().DesttoySelf();            
+            kitchenObjectNetworkObject.GetComponent<KitchenObject>().DestroySelf();            
         }
     }
     
