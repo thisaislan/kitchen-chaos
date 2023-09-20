@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
+using Unity.Netcode;
 using UnityEngine;
-using static CuttingCounter;
 
 public class StoveCounter : BaseCounter, IHasProgress
 {
@@ -28,15 +28,11 @@ public class StoveCounter : BaseCounter, IHasProgress
             {
                 if (HasFryingRecipeWithInput(player.GetKitchenObject().GetKitchenObjectScriptableObject()))
                 {
-                    player.GetKitchenObject().SetKitchenObjecParent(this);
-                    
-                    CleanFryingTimer();
-                    BurningFryingTimer();
-                    InvokeOnProgressChanged(0);
+                    var kitchenObject = player.GetKitchenObject();
 
-                    OnStoveTurnOn?.Invoke(this, EventArgs.Empty);
+                    kitchenObject.SetKitchenObjecParent(this);
 
-                    StartCoroutine(StartFrying());
+                    InteractLogicPutKitchenObjectServerRpc(KitchenGameMultiplayer.Instance.GetKitchenScriptableObjectIndex(kitchenObject.GetKitchenObjectScriptableObject()));
                 }
             }
         }
@@ -46,33 +42,56 @@ public class StoveCounter : BaseCounter, IHasProgress
             {
                 GetKitchenObject().SetKitchenObjecParent(player);
 
-                CleanFryingTimer();
-                BurningFryingTimer();
-                InvokeOnProgressChanged(0);
-
-                OnStoveTurnOff?.Invoke(this, EventArgs.Empty);
-
-                StopAllCoroutines();
+                InteractLogicGetKitchenObjectServerRpc();
             }
             else
             {
                 if (player.GetKitchenObject().TryGetPlate(out var plateKitchenObject))
                 {
                     if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectScriptableObject()))
-                    {
-                        GetKitchenObject().DestroySelf();
+                    {                        
+                        KitchenObject.DestroyKitchenObject(GetKitchenObject());
 
-                        CleanFryingTimer();
-                        BurningFryingTimer();
-                        InvokeOnProgressChanged(0);
-
-                        OnStoveTurnOff?.Invoke(this, EventArgs.Empty);
-
-                        StopAllCoroutines();
+                        InteractLogicGetKitchenObjectServerRpc();
                     }
                 }
             }
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void InteractLogicPutKitchenObjectServerRpc(int kitchenObjectScriptableObjectIndex) =>
+       InteractLogicPutKitchenObjectClientRpc(kitchenObjectScriptableObjectIndex);
+
+    [ServerRpc(RequireOwnership = false)]
+    private void InteractLogicGetKitchenObjectServerRpc() =>
+       InteractLogicGetKitchenObjectClientRpc();
+
+    [ClientRpc]
+    private void InteractLogicPutKitchenObjectClientRpc(int kitchenObjectScriptableObjectIndex)
+    {
+        var kitchenObjectScriptableObject = KitchenGameMultiplayer.Instance.GetKitchenScriptableObjectFromIndex(kitchenObjectScriptableObjectIndex);
+
+        CleanTimers();
+
+        OnStoveTurnOn?.Invoke(this, EventArgs.Empty);
+        StartCoroutine(StartFrying(kitchenObjectScriptableObject));
+    }
+
+    [ClientRpc]
+    private void InteractLogicGetKitchenObjectClientRpc()
+    {
+        CleanTimers();
+
+        OnStoveTurnOff?.Invoke(this, EventArgs.Empty);
+        StopAllCoroutines();
+    }
+
+    private void CleanTimers()
+    {
+        CleanFryingTimer();
+        BurningFryingTimer();
+        InvokeOnProgressChanged(0);
     }
 
     private void CleanFryingTimer() =>
@@ -85,11 +104,11 @@ public class StoveCounter : BaseCounter, IHasProgress
 
     private FryingRecipeScriptableObject GetFryingRecipe(KitchenObjectScriptableObject kitchenObjectScriptableObject) =>
         Array.Find(fryingRecipeScriptableObjects, fryingRecipeScriptableObject =>
-                fryingRecipeScriptableObject.input.Equals(kitchenObjectScriptableObject));
+                fryingRecipeScriptableObject.input.objectName.Equals(kitchenObjectScriptableObject.objectName));
 
     private BurningRecipeScriptableObject GetBurningRecipe(KitchenObjectScriptableObject kitchenObjectScriptableObject) =>
         Array.Find(burningRecipeScriptableObjects, burningRecipeScriptableObject =>
-                burningRecipeScriptableObject.input.Equals(kitchenObjectScriptableObject));
+                burningRecipeScriptableObject.input.objectName.Equals(kitchenObjectScriptableObject.objectName));
 
     private void InvokeOnProgressChanged(float progressNormalized)
     {
@@ -99,11 +118,11 @@ public class StoveCounter : BaseCounter, IHasProgress
         });
     }
 
-    private IEnumerator StartFrying()
+    private IEnumerator StartFrying(KitchenObjectScriptableObject kitchenObjectScriptableObject)
     {
         while (true)
         {
-            var fryingRecipeScriptableObject = GetFryingRecipe(GetKitchenObject().GetKitchenObjectScriptableObject());
+            var fryingRecipeScriptableObject = GetFryingRecipe(kitchenObjectScriptableObject);
 
             fryingTimer += Time.deltaTime;
 
@@ -112,12 +131,15 @@ public class StoveCounter : BaseCounter, IHasProgress
             if (fryingTimer >= fryingRecipeScriptableObject.fryingTimerMax)
             {
                 InvokeOnProgressChanged(0);
+               
+                if (IsServer)
+                {
+                    KitchenObject.DestroyKitchenObject(GetKitchenObject());
 
-                GetKitchenObject().DestroySelf();
+                    KitchenObject.SpawnKitchenObject(fryingRecipeScriptableObject.output, this);
+                }
 
-                KitchenObject.SpawnKitchenObject(fryingRecipeScriptableObject.output, this);
-
-                StartCoroutine(StartBurning());
+                StartCoroutine(StartBurning(GetKitchenObject().GetKitchenObjectScriptableObject()));
                 break;
             }
 
@@ -126,11 +148,11 @@ public class StoveCounter : BaseCounter, IHasProgress
 
     }
 
-    private IEnumerator StartBurning()
+    private IEnumerator StartBurning(KitchenObjectScriptableObject kitchenObjectScriptableObject)
     {
         while (true)
         {
-            var burningRecipeScriptableObject = GetBurningRecipe(GetKitchenObject().GetKitchenObjectScriptableObject());
+            var burningRecipeScriptableObject = GetBurningRecipe(kitchenObjectScriptableObject);
             
             burningTimer += Time.deltaTime;
 
@@ -140,9 +162,12 @@ public class StoveCounter : BaseCounter, IHasProgress
             {
                 InvokeOnProgressChanged(0);
 
-                GetKitchenObject().DestroySelf();
+                if (IsServer)
+                {
+                    KitchenObject.DestroyKitchenObject(GetKitchenObject());
 
-                KitchenObject.SpawnKitchenObject(burningRecipeScriptableObject.output, this);
+                    KitchenObject.SpawnKitchenObject(burningRecipeScriptableObject.output, this);
+                }
 
                 OnStoveTurnOff?.Invoke(this, EventArgs.Empty);
 

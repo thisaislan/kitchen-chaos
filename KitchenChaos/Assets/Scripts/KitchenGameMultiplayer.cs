@@ -57,10 +57,10 @@ public class KitchenGameMultiplayer : NetworkBehaviour
     public void DestroyKitchenObject(KitchenObject kitchenObject) =>
         DestroyKitchenObjectServerRpc(kitchenObject.NetworkObject);
 
-    private int GetKitchenScriptableObjectIndex(KitchenObjectScriptableObject kitchenObjectScriptableObject) =>
+    public int GetKitchenScriptableObjectIndex(KitchenObjectScriptableObject kitchenObjectScriptableObject) =>
         KichenObjectList.kitchenObjectScriptableObjectsList.IndexOf(kitchenObjectScriptableObject);
 
-    private KitchenObjectScriptableObject GetKitchenScriptableObjectFromIndex(int kitchenObjectScriptableObjectIndex) =>
+    public KitchenObjectScriptableObject GetKitchenScriptableObjectFromIndex(int kitchenObjectScriptableObjectIndex) =>
         KichenObjectList.kitchenObjectScriptableObjectsList[kitchenObjectScriptableObjectIndex];
 
 }
