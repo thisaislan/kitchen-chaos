@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public class PlateKitchenObject : KitchenObject
@@ -15,6 +16,23 @@ public class PlateKitchenObject : KitchenObject
 
     public List<KitchenObjectScriptableObject> kitchenObjectScriptableObjects { get; private set; } = new();
 
+    [ServerRpc(RequireOwnership = false)]
+    private void AddIngridientServerRpc(int kitchenObjectScriptableObjectIndex) =>
+        AddIngridientClientRpc(kitchenObjectScriptableObjectIndex);
+
+    [ClientRpc]
+    private void AddIngridientClientRpc(int kitchenObjectScriptableObjectIndex)
+    {
+        var kitchenObjectScriptableObject = KitchenGameMultiplayer.Instance.GetKitchenScriptableObjectFromIndex(kitchenObjectScriptableObjectIndex);
+
+        kitchenObjectScriptableObjects.Add(kitchenObjectScriptableObject);
+
+        OnIngridientAddedEvent?.Invoke(this, new OnIngredientEventArgs
+        {
+            kitchenObjectScriptableObject = kitchenObjectScriptableObject
+        });
+    }
+
     public bool TryAddIngredient(KitchenObjectScriptableObject kitchenObjectScriptableObject)
     {
         if (kitchenObjectScriptableObjects.Contains(kitchenObjectScriptableObject) ||
@@ -23,12 +41,7 @@ public class PlateKitchenObject : KitchenObject
             return false;
         }
 
-        kitchenObjectScriptableObjects.Add(kitchenObjectScriptableObject);
-
-        OnIngridientAddedEvent?.Invoke(this, new OnIngredientEventArgs
-        {
-            kitchenObjectScriptableObject = kitchenObjectScriptableObject
-        });
+        AddIngridientServerRpc(KitchenGameMultiplayer.Instance.GetKitchenScriptableObjectIndex(kitchenObjectScriptableObject));
 
         return true;
     }
