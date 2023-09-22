@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -26,8 +27,10 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
     [SerializeField] private float interactDistance = 2f;
         
     [SerializeField] private LayerMask countersLayerMask;
+    [SerializeField] private LayerMask collisionsLayerMask;
     
     [SerializeField] private GameObject kitchenObjectHoldPoint;
+    [SerializeField] private List<Vector3> spawnPositionList;
 
     public bool IsWalking { get; private set; }
 
@@ -44,6 +47,7 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
             LocalInstance = this;
         }
 
+        transform.position = spawnPositionList[(int)OwnerClientId];
         OnAnyPlayerSpawn?.Invoke(this, EventArgs.Empty);
     }
 
@@ -196,7 +200,7 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
         (axis < -0.4f || axis > +0.4f) && CanMove(direction, distance);
 
     private bool CanMove(Vector3 direction, float distance) =>
-        !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, direction, distance);
+        !Physics.BoxCast(transform.position, Vector3.one * playerRadius, direction, Quaternion.identity, distance, collisionsLayerMask);
 
     private void SetRotation(Vector3 direction) =>
         transform.forward = Vector3.Slerp(transform.forward, direction, Time.deltaTime * rotateSpeed);
