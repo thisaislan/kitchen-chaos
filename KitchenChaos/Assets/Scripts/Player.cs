@@ -23,7 +23,6 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
     [SerializeField] private float rotateSpeed = 10f;
 
     [SerializeField] private float playerRadius = 0.7f;
-    [SerializeField] private float playerHeight = 2f;
     [SerializeField] private float interactDistance = 2f;
         
     [SerializeField] private LayerMask countersLayerMask;
@@ -95,7 +94,8 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
 
     private void OnGameInputInteractAction(object sender, EventArgs e)
     {
-        if (GameManager.Instance.State == GameManager.GameState.GamePlaying)
+
+        if (GameManager.Instance.State.Value == GameManager.GameState.GamePlaying)
         {
             selectedClearCounter?.Interact(this);
         }
@@ -103,7 +103,7 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
 
     private void OnGameInputInteractAlternateAction(object sender, EventArgs e)
     {
-        if (GameManager.Instance.State == GameManager.GameState.GamePlaying)
+        if (GameManager.Instance.State.Value == GameManager.GameState.GamePlaying)
         {
             selectedClearCounter?.InteractAlternate(this);
         }

@@ -21,30 +21,28 @@ public class TutotialUI : MonoBehaviour
     private void Start()
     {
         GameInput.Instance.OnRebinding += OnGameInputRebinding;
-        GameManager.Instance.OnStateChanged += OnGameManagerStateChanged;
+        GameManager.Instance.OnLocalPlayerReadyChanged += OnGameManagerLocalPlayerReadyChanged;
 
         tutorialConteiner.SetActive(true);
         UpdateVisuals();
     }
 
-
     private void OnDestroy()
     {
         GameInput.Instance.OnRebinding -= OnGameInputRebinding;
-        GameManager.Instance.OnStateChanged -= OnGameManagerStateChanged;
+        GameManager.Instance.OnLocalPlayerReadyChanged -= OnGameManagerLocalPlayerReadyChanged;
     }
 
-    private void OnGameInputRebinding(object sender, System.EventArgs e) =>
-        UpdateVisuals();
-
-    private void OnGameManagerStateChanged(object sender, System.EventArgs e)
+    private void OnGameManagerLocalPlayerReadyChanged(object sender, System.EventArgs e)
     {
-        if (GameManager.Instance.State == GameManager.GameState.CountdownToStart)
+        if (GameManager.Instance.IsLocalPlayerReady)
         {
             tutorialConteiner.SetActive(false);
         }
     }
 
+    private void OnGameInputRebinding(object sender, System.EventArgs e) =>
+        UpdateVisuals();
 
     private void UpdateVisuals()
     {

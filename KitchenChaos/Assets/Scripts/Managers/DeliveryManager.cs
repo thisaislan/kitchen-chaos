@@ -33,11 +33,7 @@ public class DeliveryManager : NetworkBehaviour
 
     private void Start()
     {
-        // TODO remove this later
-        //if (IsServer)
-        //{
-            StartCoroutine(StarSpawnRecipeTimer());
-      //  }
+        StartCoroutine(StarSpawnRecipeTimer());
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -108,10 +104,9 @@ public class DeliveryManager : NetworkBehaviour
 
     private IEnumerator StarSpawnRecipeTimer()
     {           
-        yield return new WaitUntil(() => GameManager.Instance.State == GameManager.GameState.GamePlaying);
+        yield return new WaitUntil(() => GameManager.Instance.State.Value == GameManager.GameState.GamePlaying);
 
-        // TODO remove this later
-        if (!IsHost) {
+        if (!IsServer) {
             yield return null;
         }
 

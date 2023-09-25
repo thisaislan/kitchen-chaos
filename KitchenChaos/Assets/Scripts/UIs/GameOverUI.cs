@@ -15,7 +15,7 @@ public class GameOverUI : MonoBehaviour
 
     private void OnGameManagerStateChanged(object sender, System.EventArgs e)
     {
-        if (GameManager.Instance.State == GameManager.GameState.GameOver)
+        if (GameManager.Instance.State.Value == GameManager.GameState.GameOver)
         {
             recipesDelivered.text = DeliveryManager.Instance.successfulRecipesAmount.ToString();
             gameOverConteiner.SetActive(true);

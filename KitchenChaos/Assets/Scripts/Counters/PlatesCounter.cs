@@ -21,7 +21,7 @@ public class PlatesCounter : BaseCounter
     {
         if (!IsServer) { return; }
 
-        if (GameManager.Instance.State == GameManager.GameState.GamePlaying)
+        if (GameManager.Instance.State.Value == GameManager.GameState.GamePlaying)
         {
             spawnPlateTimer += Time.deltaTime;
 

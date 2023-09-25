@@ -8,7 +8,7 @@ public class GamePlayingClockUI : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.Instance.State == GameManager.GameState.GamePlaying)
+        if (GameManager.Instance.State.Value == GameManager.GameState.GamePlaying)
         {
             timerImage.fillAmount = GameManager.Instance.GetGamePlayTimeNormalized();
         }

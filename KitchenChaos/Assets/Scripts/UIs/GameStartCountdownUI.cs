@@ -17,9 +17,9 @@ public class GameStartCountdownUI : MonoBehaviour
 
     private void Update()
     {
-        var currentCountdownNumber = Mathf.CeilToInt(GameManager.Instance.CountdownToStartTimer).ToString();
+        var currentCountdownNumber = Mathf.CeilToInt(GameManager.Instance.CountdownToStartTimer.Value).ToString();
 
-        if (!countdownText.text.Equals(currentCountdownNumber.ToString()) && GameManager.Instance.State == GameManager.GameState.CountdownToStart)
+        if (!countdownText.text.Equals(currentCountdownNumber.ToString()) && GameManager.Instance.State.Value == GameManager.GameState.CountdownToStart)
         {
             countdownText.text = currentCountdownNumber.ToString();
             animator.SetTrigger(NUMBER_POPUP_TRIGGER);
@@ -28,6 +28,6 @@ public class GameStartCountdownUI : MonoBehaviour
     }
 
     private void OnGameManagerStateChanged(object sender, System.EventArgs e) =>
-        countdownText.gameObject.SetActive(GameManager.Instance.State == GameManager.GameState.CountdownToStart);
+        countdownText.gameObject.SetActive(GameManager.Instance.State.Value == GameManager.GameState.CountdownToStart);
 
 }
