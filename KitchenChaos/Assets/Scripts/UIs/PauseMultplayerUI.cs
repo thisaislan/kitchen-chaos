@@ -17,10 +17,20 @@ public class PauseMultplayerUI : MonoBehaviour
         GameManager.Instance.OnGameUnpause -= OnGameManagerGameUnpause;
     }
 
-    private void OnGameManagerGamePause(object sender, EventArgs e) =>
-        pauseMultplayerContainer.SetActive(true);
+    private void OnGameManagerGamePause(object sender, EventArgs e)
+    {
+        if (GameManager.Instance.IsGamePaused.Value && !GameManager.Instance.IsLocalGamePaused)
+        {
+            pauseMultplayerContainer.SetActive(true);
+        }
+    }
 
-    private void OnGameManagerGameUnpause(object sender, EventArgs e) =>
-        pauseMultplayerContainer.SetActive(false);
+    private void OnGameManagerGameUnpause(object sender, EventArgs e)
+    {
+        if (!GameManager.Instance.IsGamePaused.Value)
+        {
+            pauseMultplayerContainer.SetActive(false);
+        }
+    }
     
 }
