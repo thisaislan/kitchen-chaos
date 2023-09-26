@@ -90,7 +90,7 @@ public class OptionsUI : MonoBehaviour
     {
         UpdateVisuals();
 
-        GameManager.Instance.OnTogglePause += OnGameManagerTogglePause;
+        GameManager.Instance.OnLocalGamePaused += OnGameManagerTogglePause;
     }
 
     private void RebindingBiding(GameInput.Biding biding)
@@ -104,7 +104,7 @@ public class OptionsUI : MonoBehaviour
 
     private void OnGameManagerTogglePause(object sender, System.EventArgs e)
     {
-        if (!GameManager.Instance.IsGamePaused) { Hide(); }
+        if (!GameManager.Instance.IsLocalGamePaused) { Hide(); }
     }
 
     private void UpdateVisuals()

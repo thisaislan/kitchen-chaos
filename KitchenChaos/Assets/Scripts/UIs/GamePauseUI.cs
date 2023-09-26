@@ -11,7 +11,7 @@ public class GamePauseUI : MonoBehaviour
 
     private void Awake()
     {
-        resumeButton.onClick.AddListener(() => GameManager.Instance.ToglePauseGame());
+        resumeButton.onClick.AddListener(() => GameManager.Instance.UnpauseGame());
 
         optionsButton.onClick.AddListener(() =>
         {
@@ -27,17 +27,29 @@ public class GamePauseUI : MonoBehaviour
         mainMenuButton.onClick.AddListener(() => Loader.LoadScene(Loader.SceneName.MainMenuScene));
     }
 
-    void Start() =>
-        GameManager.Instance.OnTogglePause += OnGameManagerTogglePause;
-
-    private void OnGameManagerTogglePause(object sender, System.EventArgs e)
+    void Start()
     {
-        pauseConteiner.SetActive(GameManager.Instance.IsGamePaused);
+        GameManager.Instance.OnLocalGamePaused += OnGameManagerLocalGamePause;
+        GameManager.Instance.OnLocalGameUnpaused += OnGameManagerLocalGameUnpause;
+    }
 
-        if (GameManager.Instance.IsGamePaused)
+    private void OnDestroy()
+    {
+        GameManager.Instance.OnLocalGamePaused -= OnGameManagerLocalGamePause;
+        GameManager.Instance.OnLocalGameUnpaused -= OnGameManagerLocalGameUnpause;
+    }
+
+    private void OnGameManagerLocalGamePause(object sender, System.EventArgs e)
+    {
+        pauseConteiner.SetActive(true);
+
+        if (GameManager.Instance.IsLocalGamePaused)
         {
             resumeButton.Select();
         }
     }
-    
+
+    private void OnGameManagerLocalGameUnpause(object sender, System.EventArgs e) =>
+        pauseConteiner.SetActive(false);
+
 }

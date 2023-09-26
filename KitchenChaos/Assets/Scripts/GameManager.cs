@@ -10,7 +10,10 @@ public class GameManager : NetworkBehaviour
     public static GameManager Instance { get; private set; }
 
     public event EventHandler OnStateChanged;
-    public event EventHandler OnTogglePause;
+    public event EventHandler OnLocalGamePaused;
+    public event EventHandler OnLocalGameUnpaused;
+    public event EventHandler OnGamePause;
+    public event EventHandler OnGameUnpause;
     public event EventHandler OnLocalPlayerReadyChanged;
 
     public enum GameState
@@ -25,16 +28,18 @@ public class GameManager : NetworkBehaviour
 
     public NetworkVariable<float> CountdownToStartTimer { get; private set; } = new NetworkVariable<float>(3f);
 
+    public NetworkVariable<bool> IsGamePaused { get; private set; } = new NetworkVariable<bool>(false);
+
     private NetworkVariable<float> gamePalyingTimer = new NetworkVariable<float>(0f);
 
     private Dictionary<ulong, bool> playerReadyDictionary = new Dictionary<ulong, bool>();
+    private Dictionary<ulong, bool> playerPauseDictionary = new Dictionary<ulong, bool>();
 
     public bool IsLocalPlayerReady { get; private set; }
 
-    public bool IsGamePaused { get; private set; }
+    public bool IsLocalGamePaused { get; private set; }
 
     private float gamePalyingTimerMax = 90f;
-
 
     private void Awake()
     {
@@ -50,14 +55,18 @@ public class GameManager : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         State.OnValueChanged += OnStateChange;
+        IsGamePaused.OnValueChanged += OnGamePauseChange;
         base.OnNetworkSpawn();
     }
 
     public override void OnDestroy()
     {
         State.OnValueChanged -= OnStateChange;
+        IsGamePaused.OnValueChanged -= OnGamePauseChange;
+
         GameInput.Instance.OnPauseAction -= OnGameInputPauseAction;
         GameInput.Instance.OnInteractAction -= OnGameInputInteractAction;
+
         base.OnDestroy();
     }
 
@@ -78,13 +87,42 @@ public class GameManager : NetworkBehaviour
         State.Value = GameState.CountdownToStart;
     }
 
-    private void OnStateChange(GameState previousValue, GameState newValue)
+    [ServerRpc(RequireOwnership = false)]
+    private void ToglePauseGameServerRpc(bool toggle, ServerRpcParams serverRpcParams = default)
     {
+        playerPauseDictionary[serverRpcParams.Receive.SenderClientId] = toggle;
+
+        foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds)
+        {
+            if (playerPauseDictionary.ContainsKey(clientId) && playerPauseDictionary[clientId])
+            {
+                IsGamePaused.Value = true;
+                return;
+            }
+        }
+
+        IsGamePaused.Value = false;
+    }
+
+    private void OnStateChange(GameState previousValue, GameState newValue) =>
         OnStateChanged?.Invoke(this, EventArgs.Empty);
+
+    private void OnGamePauseChange(bool previousValue, bool newValue)
+    {
+        Time.timeScale = newValue ? 0 : 1;
+
+        if (newValue)
+        {
+            OnGamePause?.Invoke(this, EventArgs.Empty);
+        }
+        else
+        {
+            OnGameUnpause?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     private void OnGameInputPauseAction(object sender, EventArgs e) =>
-        ToglePauseGame();
+        PauseGame();
 
     private void OnGameInputInteractAction(object sender, EventArgs e)
     {
@@ -137,13 +175,22 @@ public class GameManager : NetworkBehaviour
     public float GetGamePlayTimeNormalized() =>
         1 - (gamePalyingTimer.Value / gamePalyingTimerMax);
 
-    public void ToglePauseGame()
+    public void UnpauseGame()
     {
-        IsGamePaused = !IsGamePaused;
+        IsLocalGamePaused = false;
 
-        Time.timeScale = IsGamePaused ? 0 : 1;
+        OnLocalGameUnpaused?.Invoke(this, EventArgs.Empty);
 
-        OnTogglePause?.Invoke(this, EventArgs.Empty);
+        ToglePauseGameServerRpc(false);
+    }
+
+    public void PauseGame()
+    {
+        IsLocalGamePaused = true;
+
+        OnLocalGamePaused?.Invoke(this, EventArgs.Empty);
+
+        ToglePauseGameServerRpc(true);
     }
 
 }
