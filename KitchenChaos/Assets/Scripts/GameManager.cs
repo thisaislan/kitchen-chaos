@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
@@ -56,7 +57,11 @@ public class GameManager : NetworkBehaviour
     {
         State.OnValueChanged += OnStateChange;
         IsGamePaused.OnValueChanged += OnGamePauseChange;
-        base.OnNetworkSpawn();
+
+        if (IsServer)
+        {
+            NetworkManager.Singleton.OnClientDisconnectCallback += OnNetworkClientDisconnect;
+        }
     }
 
     public override void OnDestroy()
@@ -103,6 +108,9 @@ public class GameManager : NetworkBehaviour
 
         IsGamePaused.Value = false;
     }
+
+    private void OnNetworkClientDisconnect(ulong clientId) =>
+        StartCoroutine(DelayToglePauseGame());
 
     private void OnStateChange(GameState previousValue, GameState newValue) =>
         OnStateChanged?.Invoke(this, EventArgs.Empty);
@@ -193,4 +201,9 @@ public class GameManager : NetworkBehaviour
         ToglePauseGameServerRpc(true);
     }
 
+    private IEnumerator DelayToglePauseGame()
+    {
+        yield return new WaitForEndOfFrame();
+        ToglePauseGameServerRpc(false);
+    }
 }
