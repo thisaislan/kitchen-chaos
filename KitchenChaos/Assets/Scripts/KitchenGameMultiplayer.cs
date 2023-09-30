@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
@@ -63,4 +64,27 @@ public class KitchenGameMultiplayer : NetworkBehaviour
     public KitchenObjectScriptableObject GetKitchenScriptableObjectFromIndex(int kitchenObjectScriptableObjectIndex) =>
         KichenObjectList.kitchenObjectScriptableObjectsList[kitchenObjectScriptableObjectIndex];
 
+    public void StartHost()
+    {
+        NetworkManager.Singleton.ConnectionApprovalCallback += OnNetworkManagerConnectionApprovalCallback;
+        NetworkManager.Singleton.StartHost();
+    }
+
+    public void StartClient()
+    {
+        NetworkManager.Singleton.StartClient();
+    }
+
+    private void OnNetworkManagerConnectionApprovalCallback(NetworkManager.ConnectionApprovalRequest connectionApprovalRequest, NetworkManager.ConnectionApprovalResponse connectionApprovalResponse)
+    {
+        if (GameManager.Instance.State.Value == GameManager.GameState.WaitingToStart)
+        {
+            connectionApprovalResponse.Approved = true;
+            connectionApprovalResponse.CreatePlayerObject = true;
+        }
+        else
+        { 
+            connectionApprovalResponse.Approved = false;
+        }
+    }
 }
