@@ -1,18 +1,24 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class KitchenGameMultiplayer : NetworkBehaviour
 {
     public static KitchenGameMultiplayer Instance { get; private set; }
+
+    private const int MAX_NUMBER_OF_PLAYERS = 4;
+
+    public event EventHandler OnTryingToJoinGame;
+    public event EventHandler OnFailedToJoinGame;
 
     [SerializeField] private KichenObjectList KichenObjectList;
 
     private void Awake()
     {
         Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
     
     [ServerRpc(RequireOwnership = false)]
@@ -72,19 +78,31 @@ public class KitchenGameMultiplayer : NetworkBehaviour
 
     public void StartClient()
     {
+        OnTryingToJoinGame?.Invoke(this, EventArgs.Empty);
+
+        NetworkManager.Singleton.OnClientDisconnectCallback += OnNetworkManagerDisconnectCallback;
         NetworkManager.Singleton.StartClient();
     }
 
+    private void OnNetworkManagerDisconnectCallback(ulong obj) =>
+        OnFailedToJoinGame?.Invoke(this, EventArgs.Empty);
+
     private void OnNetworkManagerConnectionApprovalCallback(NetworkManager.ConnectionApprovalRequest connectionApprovalRequest, NetworkManager.ConnectionApprovalResponse connectionApprovalResponse)
     {
-        if (GameManager.Instance.State.Value == GameManager.GameState.WaitingToStart)
+        if (SceneManager.GetActiveScene().name != Loader.SceneName.CharacterSelectScene.ToString())
         {
-            connectionApprovalResponse.Approved = true;
-            connectionApprovalResponse.CreatePlayerObject = true;
-        }
-        else
-        { 
             connectionApprovalResponse.Approved = false;
+            connectionApprovalResponse.Reason = "The game has already started!";
+            return;
         }
+
+        if (NetworkManager.Singleton.ConnectedClientsIds.Count >= MAX_NUMBER_OF_PLAYERS)
+        {
+            connectionApprovalResponse.Approved = false;
+            connectionApprovalResponse.Reason = "The game is full!";
+            return;
+        }
+
+        connectionApprovalResponse.Approved = true;
     }
 }

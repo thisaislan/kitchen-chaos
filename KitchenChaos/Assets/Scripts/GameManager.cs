@@ -25,6 +25,8 @@ public class GameManager : NetworkBehaviour
         GameOver
     }
 
+    [SerializeField] private GameObject playerPrefab;
+
     public NetworkVariable<GameState> State { get; private set; } = new NetworkVariable<GameState>(GameState.WaitingToStart);
 
     public NetworkVariable<float> CountdownToStartTimer { get; private set; } = new NetworkVariable<float>(3f);
@@ -61,6 +63,7 @@ public class GameManager : NetworkBehaviour
         if (IsServer)
         {
             NetworkManager.Singleton.OnClientDisconnectCallback += OnNetworkClientDisconnect;
+            NetworkManager.Singleton.SceneManager.OnLoadEventCompleted += OnNetworkManagerOnLoadEventCompleted;
         }
     }
 
@@ -107,6 +110,15 @@ public class GameManager : NetworkBehaviour
         }
 
         IsGamePaused.Value = false;
+    }
+
+    private void OnNetworkManagerOnLoadEventCompleted(string sceneName, UnityEngine.SceneManagement.LoadSceneMode loadSceneMode, List<ulong> clientsCompleted, List<ulong> clientsTimedOut)
+    {
+        foreach (var clientId in NetworkManager.Singleton.ConnectedClientsIds)
+        {
+            var playerInstance = Instantiate(playerPrefab);
+            playerInstance.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);
+        }
     }
 
     private void OnNetworkClientDisconnect(ulong clientId) =>
