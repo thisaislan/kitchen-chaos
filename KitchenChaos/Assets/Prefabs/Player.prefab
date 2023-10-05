@@ -54,7 +54,6 @@ MonoBehaviour:
   movementSpeed: 7
   rotateSpeed: 10
   playerRadius: 0.6
-  playerHeight: 2
   interactDistance: 2
   countersLayerMask:
     serializedVersion: 2
@@ -68,6 +67,7 @@ MonoBehaviour:
   - {x: 2, y: 0, z: 0}
   - {x: -2, y: 0, z: -2}
   - {x: 2, y: 0, z: -2}
+  playerVisual: {fileID: 3863471087760736944}
 --- !u!114 &575847639931244732
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -382,6 +382,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2740116082870338074}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &3863471087760736944 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1412748692328988842, guid: 1c5dda3c7cd3cf742afcade5419faeab,
+    type: 3}
+  m_PrefabInstance: {fileID: 2740116082870338074}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 846549337289485885}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f0fd2154c67647488d360402bc83258, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!95 &8474199651633638222 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 6024899996280613204, guid: 1c5dda3c7cd3cf742afcade5419faeab,

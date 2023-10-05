@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "KichenObjectList", menuName = "Kitchen Chaos/Kichen Object List")]
+[CreateAssetMenu(fileName = "kichenObjectList", menuName = "Kitchen Chaos/Kichen Object List")]
 public class KichenObjectList : ScriptableObject
 {
 

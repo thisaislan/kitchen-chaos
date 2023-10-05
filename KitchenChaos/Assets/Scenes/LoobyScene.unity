@@ -1067,7 +1067,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7885b2cc97ceae43bcdefcc6b07e26c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  KichenObjectList: {fileID: 11400000, guid: 52bd86abb9ad0e942b06626364db21fa, type: 2}
+  kichenObjectList: {fileID: 11400000, guid: 52bd86abb9ad0e942b06626364db21fa, type: 2}
+  colorList:
+  - {r: 1, g: 0.8835707, b: 0, a: 1}
+  - {r: 0.31243825, g: 1, b: 0, a: 1}
+  - {r: 1, g: 0.41844082, b: 0, a: 1}
+  - {r: 0, g: 1, b: 0.93424654, a: 1}
+  - {r: 1, g: 0, b: 0.7256975, a: 1}
+  - {r: 0, g: 0.049598217, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 0.5188679, g: 0.5188679, b: 0.5188679, a: 1}
+  - {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
+  - {r: 0, g: 0, b: 0, a: 1}
 --- !u!4 &866991770
 Transform:
   m_ObjectHideFlags: 0
