@@ -31,10 +31,13 @@ public class LobbyCreateUI : MonoBehaviour
         });
     }
 
-    public void Show() =>
+    public void Show()
+    {
         container.SetActive(true);
+        createPublicButton.Select();
+    }
 
-    private void Hide() =>
+        private void Hide() =>
         container.SetActive(false);
 
 }

@@ -23,8 +23,6 @@ public class MainMenuUI : MonoBehaviour
 
         quitButton.onClick.AddListener(() => Application.Quit());
 
-        multiplayerButton.Select();
-
         Time.timeScale = 1;
 
     }

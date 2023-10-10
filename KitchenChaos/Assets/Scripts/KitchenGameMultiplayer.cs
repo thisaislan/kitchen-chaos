@@ -15,7 +15,7 @@ public class KitchenGameMultiplayer : NetworkBehaviour
 
     public static KitchenGameMultiplayer Instance { get; private set; }
 
-    public static bool PlayMultplayer;
+    public static bool PlayMultplayer = true;
 
     public event EventHandler OnTryingToJoinGame;
     public event EventHandler OnFailedToJoinGame;
