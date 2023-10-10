@@ -9,10 +9,13 @@ using UnityEngine.UIElements;
 
 public class KitchenGameMultiplayer : NetworkBehaviour
 {
-    public static KitchenGameMultiplayer Instance { get; private set; }
 
     public const int MAX_NUMBER_OF_PLAYERS = 4;
     public const string PLAYER_PREFS_PLAYER_NAME_MULTIPLAYER = "player_name_multiplayer";
+
+    public static KitchenGameMultiplayer Instance { get; private set; }
+
+    public static bool PlayMultplayer;
 
     public event EventHandler OnTryingToJoinGame;
     public event EventHandler OnFailedToJoinGame;
@@ -47,6 +50,14 @@ public class KitchenGameMultiplayer : NetworkBehaviour
         playerName = PlayerPrefs.GetString(PLAYER_PREFS_PLAYER_NAME_MULTIPLAYER, "Player" + UnityEngine.Random.Range(100, 1000));
 
         DontDestroyOnLoad(gameObject);
+    }
+
+    private void Start()
+    {
+        if (!PlayMultplayer)
+        {
+            KitchenGameLobby.Instance.CreateLobby("Lobby Name", true);
+        }
     }
 
     public override void OnDestroy()
