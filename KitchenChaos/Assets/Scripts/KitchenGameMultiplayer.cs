@@ -5,6 +5,7 @@ using Unity.Netcode;
 using Unity.Services.Authentication;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 
 public class KitchenGameMultiplayer : NetworkBehaviour
 {
@@ -58,14 +59,19 @@ public class KitchenGameMultiplayer : NetworkBehaviour
     private void SpawnKitchenObjectServerRpc(int kitchenObjectScriptableObjectIndex, NetworkObjectReference kitchenObjectParentNetworkObjectReference
        )
     {
-        var kitchenObjectScriptableObject = GetKitchenScriptableObjectFromIndex(kitchenObjectScriptableObjectIndex);
-        var kitchenObject = Instantiate(kitchenObjectScriptableObject.prefab).GetComponent<KitchenObject>();
-        var kitchenObjectNetworkObject = kitchenObject.GetComponent<NetworkObject>();
-
         if (kitchenObjectParentNetworkObjectReference.TryGet(out NetworkObject kitchenObjectParentNetworkObject))
         {
-            kitchenObjectNetworkObject.Spawn(true);
-            kitchenObject.SetKitchenObjecParent(kitchenObjectParentNetworkObject.GetComponent<IKitchenObjectParent>());
+            var kitchenObjectParent = kitchenObjectParentNetworkObject.GetComponent<IKitchenObjectParent>();
+
+            if (!kitchenObjectParent.HasKitchenObject())
+            {
+                var kitchenObjectScriptableObject = GetKitchenScriptableObjectFromIndex(kitchenObjectScriptableObjectIndex);
+                var kitchenObject = Instantiate(kitchenObjectScriptableObject.prefab).GetComponent<KitchenObject>();
+                var kitchenObjectNetworkObject = kitchenObject.GetComponent<NetworkObject>();
+
+                kitchenObjectNetworkObject.Spawn(true);
+                kitchenObject.SetKitchenObjecParent(kitchenObjectParent);
+            }
         }
     }
 
@@ -74,8 +80,11 @@ public class KitchenGameMultiplayer : NetworkBehaviour
     {
         if (kitchenObjectNetworkObjectReference.TryGet(out NetworkObject kitchenObjectNetworkObject))
         {
-            ClearKicthenObjectOnParantClientRpc(kitchenObjectNetworkObjectReference);
-            kitchenObjectNetworkObject.GetComponent<KitchenObject>().DestroySelf();            
+            if (kitchenObjectNetworkObject != null)
+            {
+                ClearKicthenObjectOnParantClientRpc(kitchenObjectNetworkObjectReference);
+                kitchenObjectNetworkObject.GetComponent<KitchenObject>().DestroySelf();
+            }
         }
     }
 

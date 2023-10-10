@@ -51,19 +51,29 @@ public class CuttingCounter : BaseCounter, IHasProgress
 
     public override void InteractAlternate(Player player)
     {
-        if (HasKitchenObject())
+        if (HasKitchenObject() && HasRecipeWithInput(GetKitchenObject().GetKitchenObjectScriptableObject()))
         {
             CuttingKitchenObjectServerRpc();
         }
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void CuttingKitchenObjectServerRpc() =>
-        CuttingKitchenObjectClientRpc();
+    private void CuttingKitchenObjectServerRpc()
+    {
+        if (HasKitchenObject() && HasRecipeWithInput(GetKitchenObject().GetKitchenObjectScriptableObject()))
+        {
+            CuttingKitchenObjectClientRpc();
+        }
+    }
 
     [ServerRpc(RequireOwnership = false)]
-    private void InteractLogicServerRpc() =>
-        InteractLogicClientRpc();
+    private void InteractLogicServerRpc()
+    {
+        if (HasKitchenObject() && HasRecipeWithInput(GetKitchenObject().GetKitchenObjectScriptableObject()))
+        {
+            InteractLogicClientRpc();
+        }
+    }
 
     [ClientRpc]
     private void CuttingKitchenObjectClientRpc()
